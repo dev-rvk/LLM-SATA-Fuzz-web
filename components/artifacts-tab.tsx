@@ -1,67 +1,56 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Bot, FileDown } from "lucide-react"
 import { CodeBlock } from "@/components/code-block"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
-// Import sample data
-import fridaScript from "@/output/llm/generated_artifacts/diva-beta/finding_4_script.js"
-import adbCommand from "@/output/llm/generated_artifacts/diva-beta/finding_4_adb.txt"
-import hints from "@/output/llm/generated_artifacts/diva-beta/finding_4_hints.txt"
-import runConfig from "@/output/llm/generated_artifacts/diva-beta/run_finding_4.json"
+// Define finding titles
+const FINDING_TITLES = [
+  "Insecure Data Storage - SharedPreferences",
+  "Insecure Data Storage - SQLite",
+  "Input Validation - SQL Injection",
+  "Access Control - Activity Access",
+  "Input Validation - XSS",
+  "Access Control - Local Storage",
+  "Input Validation - Code Injection"
+]
+
+// Dynamic imports for findings
+const importFindingArtifacts = (index: number) => {
+  const artifacts = {
+    script: require(`@/output/llm/generated_artifacts/diva-beta/finding_${index}_script.js`),
+    adb: require(`@/output/llm/generated_artifacts/diva-beta/finding_${index}_adb.txt`),
+    hints: require(`@/output/llm/generated_artifacts/diva-beta/finding_${index}_hints.txt`),
+    config: require(`@/output/llm/generated_artifacts/diva-beta/run_finding_${index}.json`)
+  }
+
+  // Helper function to parse JSON string or return the original if it's already an object
+  const parseJSON = (json: any) => {
+    if (typeof json === 'string') {
+      try {
+        return JSON.parse(json);
+      } catch (e) {
+        return json;
+      }
+    }
+    return json;
+  };
+
+  return {
+    script: artifacts.script?.default || artifacts.script || '',
+    adb: artifacts.adb?.default || artifacts.adb || '',
+    hints: artifacts.hints?.default || artifacts.hints || '',
+    config: parseJSON(artifacts.config?.default || artifacts.config)
+  }
+}
 
 export function ArtifactsTab({ apkName }: { apkName: string }) {
-  const [findings, setFindings] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    // In a real app, you would fetch this data from your API
-    // For now, we'll use mock data
-    setFindings([
-      {
-        id: "finding_0",
-        title: "Insecure Data Storage - SharedPreferences",
-        artifacts: {
-          script: fridaScript,
-          adb: adbCommand,
-          hints: hints,
-          config: runConfig,
-        },
-      },
-      {
-        id: "finding_1",
-        title: "SQL Injection Vulnerability",
-        artifacts: {
-          script: fridaScript,
-          adb: adbCommand,
-          hints: hints,
-          config: runConfig,
-        },
-      },
-      {
-        id: "finding_4",
-        title: "Insecure Data Storage - File Storage",
-        artifacts: {
-          script: fridaScript,
-          adb: adbCommand,
-          hints: hints,
-          config: runConfig,
-        },
-      },
-    ])
-    setLoading(false)
-  }, [apkName])
-
-  if (loading) {
-    return <div className="flex justify-center p-8">Loading generated artifacts...</div>
-  }
-
-  if (!findings || findings.length === 0) {
-    return <div className="flex justify-center p-8">No generated artifacts found.</div>
-  }
+  const findings = Array.from({ length: 7 }, (_, i) => ({
+    id: `finding_${i}`,
+    artifacts: importFindingArtifacts(i)
+  }))
 
   return (
     <div className="space-y-6 p-4">
@@ -81,7 +70,6 @@ export function ArtifactsTab({ apkName }: { apkName: string }) {
             <AccordionTrigger className="text-left">
               <div className="flex-1">
                 <div className="font-medium">{finding.id}</div>
-                <div className="text-sm text-muted-foreground">{finding.title}</div>
               </div>
             </AccordionTrigger>
             <AccordionContent>

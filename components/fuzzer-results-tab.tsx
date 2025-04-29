@@ -16,26 +16,35 @@ export function FuzzerResultsTab({ apkName }: { apkName: string }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // In a real app, you would fetch this data from your API
-    // For now, we'll use mock data
-    setFindings([
-      {
-        id: "finding_0",
-        title: "Insecure Data Storage - SharedPreferences",
-        report: fuzzerReport,
-      },
-      {
-        id: "finding_1",
-        title: "SQL Injection Vulnerability",
-        report: fuzzerReport,
-      },
-      {
-        id: "finding_4",
-        title: "Insecure Data Storage - File Storage",
-        report: fuzzerReport,
-      },
-    ])
-    setLoading(false)
+    const loadFindings = async () => {
+      try {
+        const findings = await Promise.all(
+          Array.from({ length: 7 }, async (_, i) => {
+            try {
+              const report = await import(
+                `@/output/frida_fuzzer/finding_${i}_fuzzer_results/finding_${i}_fuzzer_report.json`
+              )
+              return {
+                id: `finding_${i}`,
+                title: `Finding ${i}`,
+                report: report.default
+              }
+            } catch (error) {
+              console.warn(`Failed to load finding_${i}:`, error)
+              return null
+            }
+          })
+        )
+
+        setFindings(findings.filter(finding => finding !== null))
+        setLoading(false)
+      } catch (error) {
+        console.error("Error loading findings:", error)
+        setLoading(false)
+      }
+    }
+
+    loadFindings()
   }, [apkName])
 
   if (loading) {
@@ -64,8 +73,16 @@ export function FuzzerResultsTab({ apkName }: { apkName: string }) {
           <AccordionItem key={index} value={`finding-${index}`}>
             <AccordionTrigger className="text-left">
               <div className="flex-1">
-                <div className="font-medium">{finding.id}</div>
-                <div className="text-sm text-muted-foreground">{finding.title}</div>
+                <div className="font-medium">Finding {index}</div>
+                {getVulnerabilityFindings(finding.report).length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {getVulnerabilityFindings(finding.report).map((conf, i) => (
+                      <Badge key={i} className="bg-red-500">
+                        {conf.type}: {conf.strategy}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </div>
             </AccordionTrigger>
             <AccordionContent>
@@ -82,15 +99,18 @@ export function FuzzerResultsTab({ apkName }: { apkName: string }) {
                     </div>
                     <div className="bg-background p-4 rounded-lg border">
                       <div className="text-2xl font-bold text-red-500">
-                        {finding.report.filter((r: any) => r.crashed).length}
+                        {finding.report.filter((r: any) => 
+                          r.crashed || 
+                          (r.detections && r.detections.some((d: { type: string }) => d.type === "Frida Error"))
+                        ).length}
                       </div>
-                      <div className="text-sm text-muted-foreground">App Crashes</div>
+                      <div className="text-sm text-muted-foreground">Failed Attempts</div>
                     </div>
                     <div className="bg-background p-4 rounded-lg border">
                       <div className="text-2xl font-bold text-amber-500">
-                        {finding.report.filter((r: any) => r.detections && r.detections.length > 0).length}
+                        {getVulnerabilityFindings(finding.report).length}
                       </div>
-                      <div className="text-sm text-muted-foreground">Detections</div>
+                      <div className="text-sm text-muted-foreground">Vulnerabilities Found</div>
                     </div>
                     <div className="bg-background p-4 rounded-lg border">
                       <div className="text-2xl font-bold text-blue-500">
@@ -99,6 +119,23 @@ export function FuzzerResultsTab({ apkName }: { apkName: string }) {
                       <div className="text-sm text-muted-foreground">UI Errors</div>
                     </div>
                   </div>
+
+                  {getVulnerabilityFindings(finding.report).length > 0 && (
+                    <div className="mb-6 p-4 border rounded-lg bg-amber-50">
+                      <h3 className="text-lg font-medium mb-2">Vulnerabilities Found</h3>
+                      <div className="space-y-2">
+                        {getVulnerabilityFindings(finding.report).map((vuln, i) => (
+                          <div key={i} className="flex items-start gap-2">
+                            <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                            <div>
+                              <div className="font-medium">{vuln.type}</div>
+                              <div className="text-sm text-muted-foreground">{vuln.message}</div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   <Accordion type="single" collapsible className="w-full">
                     {finding.report.map((iteration: any, iterIndex: number) => (
@@ -111,8 +148,10 @@ export function FuzzerResultsTab({ apkName }: { apkName: string }) {
                                 {Object.keys(iteration.inputs_used || {}).length} inputs used
                               </div>
                             </div>
-                            {iteration.crashed ? (
-                              <Badge className="bg-red-500">Crashed</Badge>
+                            {iteration.crashed || 
+                              (iteration.ui_errors && iteration.ui_errors.length > 0) || 
+                              (iteration.detections && iteration.detections.some((d: { type: string }) => d.type === "Frida Error")) ? (
+                              <Badge className="bg-red-500">Failed</Badge>
                             ) : (
                               <Badge className="bg-green-500">Success</Badge>
                             )}
@@ -125,7 +164,9 @@ export function FuzzerResultsTab({ apkName }: { apkName: string }) {
                               <TabsTrigger value="detections">
                                 Detections ({iteration.detections?.length || 0})
                               </TabsTrigger>
-                              <TabsTrigger value="errors">UI Errors ({iteration.ui_errors?.length || 0})</TabsTrigger>
+                              <TabsTrigger value="errors">
+                                UI Errors ({iteration.ui_errors?.length || 0})
+                              </TabsTrigger>
                             </TabsList>
 
                             <TabsContent value="inputs" className="space-y-4">
@@ -142,17 +183,24 @@ export function FuzzerResultsTab({ apkName }: { apkName: string }) {
                             <TabsContent value="detections" className="space-y-4">
                               <h3 className="text-lg font-medium">Detections</h3>
                               {iteration.detections && iteration.detections.length > 0 ? (
-                                iteration.detections.map((detection: any, i: number) => (
-                                  <div key={i} className="border p-3 rounded-md">
-                                    <div className="flex items-start gap-2">
-                                      <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
-                                      <div>
-                                        <div className="font-medium">{detection.type}</div>
-                                        <div className="text-sm mt-1">{detection.message}</div>
+                                <div className="border p-3 rounded-md space-y-4">
+                                  {Array.from(new Set(iteration.detections.map((d: any) => d.type))).map((type: string, i: number) => {
+                                    const typeDetections = iteration.detections.filter((d: any) => d.type === type);
+                                    return (
+                                      <div key={i} className="flex items-start gap-2">
+                                        <AlertTriangle className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
+                                        <div>
+                                          <div className="font-medium">{type}</div>
+                                          <div className="text-sm mt-1 space-y-1">
+                                            {Array.from(new Set(typeDetections.map((d: any) => d.message))).map((message, j) => (
+                                              <p key={j}>{message as string}</p>
+                                            ))}
+                                          </div>
+                                        </div>
                                       </div>
-                                    </div>
-                                  </div>
-                                ))
+                                    );
+                                  })}
+                                </div>
                               ) : (
                                 <div className="flex items-center gap-2 text-muted-foreground">
                                   <CheckCircle2 className="h-5 w-5" />
@@ -162,19 +210,32 @@ export function FuzzerResultsTab({ apkName }: { apkName: string }) {
                             </TabsContent>
 
                             <TabsContent value="errors" className="space-y-4">
-                              <h3 className="text-lg font-medium">UI Errors</h3>
+                              <h3 className="text-lg font-medium">UI Errors ({iteration.ui_errors?.length || 0})</h3>
                               {iteration.ui_errors && iteration.ui_errors.length > 0 ? (
-                                iteration.ui_errors.map((error: any, i: number) => (
-                                  <div key={i} className="border p-3 rounded-md">
-                                    <div className="flex items-start gap-2">
-                                      <AlertTriangle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
-                                      <div>
-                                        <div className="font-medium">{error.type}</div>
-                                        <div className="text-sm mt-1">{error.message}</div>
+                                <div className="space-y-2">
+                                  {iteration.ui_errors.map((error: any, i: number) => (
+                                    <div key={i} className="border p-3 rounded-md">
+                                      <div className="flex items-start gap-2">
+                                        <AlertTriangle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+                                        <div>
+                                          <div className="font-medium">
+                                            {typeof error === 'object' ? (error.type || 'Unknown Error') : 'Error'}
+                                          </div>
+                                          <div className="text-sm text-muted-foreground mt-1">
+                                            {typeof error === 'object' 
+                                              ? (error.message || JSON.stringify(error, null, 2))
+                                              : error.toString()}
+                                          </div>
+                                          {typeof error === 'object' && error.stackTrace && (
+                                            <pre className="text-xs bg-slate-50 p-2 mt-2 rounded overflow-auto">
+                                              {error.stackTrace}
+                                            </pre>
+                                          )}
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                ))
+                                  ))}
+                                </div>
                               ) : (
                                 <div className="flex items-center gap-2 text-muted-foreground">
                                   <CheckCircle2 className="h-5 w-5" />
@@ -196,3 +257,36 @@ export function FuzzerResultsTab({ apkName }: { apkName: string }) {
     </div>
   )
 }
+
+// Add this helper function at the top level
+const getVulnerabilityFindings = (report: any[]) => {
+  // First, collect all detections that aren't Frida errors
+  const allDetections = report.flatMap((iteration) => 
+    iteration.detections?.filter((d: any) => {
+      // Filter out Frida errors
+      if (d.type === "Frida Error") return false;
+      
+      // Check for either "Vulnerability Confirmed" or other significant detections
+      return d.message?.toLowerCase().includes('vulnerability confirmed') || 
+             d.type?.toLowerCase().includes('vulnerability') ||
+             d.type?.toLowerCase().includes('sensitive data') ||
+             d.type?.toLowerCase().includes('security');
+    }) || []
+  );
+
+  // Group by type and strategy to remove duplicates
+  const groupedByTypeAndStrategy = allDetections.reduce((acc: any, detection: any) => {
+    const key = `${detection.type}-${detection.strategy}`;
+    if (!acc[key]) {
+      acc[key] = {
+        type: detection.type,
+        strategy: detection.strategy,
+        message: detection.message
+      };
+    }
+    return acc;
+  }, {});
+
+  // Convert back to array
+  return Object.values(groupedByTypeAndStrategy);
+};

@@ -95,15 +95,12 @@ export function LLMStaticAnalysisTab({ apkName }: { apkName: string }) {
 
                     <div>
                       <h4 className="text-sm font-medium mb-1">Vulnerable Code Lines</h4>
-                      {finding.VulnerableCodeLines.map((line: string, lineIndex: number) => (
-                        <CodeBlock
-                          key={lineIndex}
-                          code={line}
-                          language="java"
-                          showLineNumbers={false}
-                          className="mb-2"
-                        />
-                      ))}
+                      <CodeBlock
+                        code={finding.VulnerableCodeLines.join('\n')}
+                        language="java"
+                        showLineNumbers={true}
+                        className="mb-2"
+                      />
                     </div>
 
                     <div>

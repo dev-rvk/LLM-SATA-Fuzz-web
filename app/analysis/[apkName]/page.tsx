@@ -7,7 +7,7 @@ import { LLMStaticAnalysisTab } from "@/components/llm-static-analysis-tab"
 import { ArtifactsTab } from "@/components/artifacts-tab"
 import { FuzzerResultsTab } from "@/components/fuzzer-results-tab"
 
-export default function AnalysisPage({ params }: { params: { apkName: string } }) {
+export default async function AnalysisPage({ params }: { params: { apkName: string } }) {
   const { apkName } = params
 
   return (
