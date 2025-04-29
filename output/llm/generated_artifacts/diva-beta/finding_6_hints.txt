@@ -1,0 +1,7 @@
+# Hints for finding_6
+FUZZER_TYPE_HINT: [basic]
+TARGET_ELEMENT_IDS: [ids4Usr, ids4Pwd, ids4button]
+TARGET_ELEMENT_TYPES: [EditText, EditText, Button]
+TARGET_ELEMENT_HINTS: [@string/ids1_user, @string/ids1_password, @string/ids1_save]
+PAYLOAD_KEYWORDS: [file, write, external storage]
+INPUT_FORMAT: [free_text]

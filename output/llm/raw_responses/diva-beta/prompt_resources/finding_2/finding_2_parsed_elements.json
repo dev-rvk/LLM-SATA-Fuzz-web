@@ -1,0 +1,17 @@
+[
+  {
+    "type": "TextView",
+    "id": "textView",
+    "text": "@string/log_intro"
+  },
+  {
+    "type": "EditText",
+    "id": "ccText",
+    "hint": "@string/log_enter"
+  },
+  {
+    "type": "Button",
+    "id": "button",
+    "text": "@string/log_checkout"
+  }
+]

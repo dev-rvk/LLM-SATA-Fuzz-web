@@ -1,0 +1,405 @@
+{
+    "super_version": "0.5.1",
+    "now": "2025-04-27T17:16:57.548740+05:30",
+    "now_rfc2822": "Sun, 27 Apr 2025 17:16:57 +0530",
+    "now_rfc3339": "2025-04-27T17:16:57.548740+05:30",
+    "app_package": "jakhar.aseem.diva",
+    "app_version": "1.0",
+    "app_version_number": 1,
+    "app_fingerprint": {
+        "md5": "82ab8b2193b3cfb1c737e3a786be363a",
+        "sha1": "27e849d9d7b86a3a3357fb3e980433a91d416801",
+        "sha256": "5cefc51fce9bd760b92ab2340477f4dda84b4ae0c5d04a8c9493e4fe34fab7c5"
+    },
+    "app_min_sdk_number": 15,
+    "app_min_sdk_name": "Ice Cream Sandwich MR1",
+    "app_min_sdk_version": "4.0.3",
+    "app_target_sdk_number": 23,
+    "app_target_sdk_name": "Marshmallow",
+    "app_target_sdk_version": "6.0",
+    "total_vulnerabilities": 19,
+    "criticals": [
+        {
+            "criticality": "critical",
+            "name": "Manifest Debug",
+            "description": "The application is in debug mode. This allows any malicious person to inject arbitrary code in the application. This option should only be used while in development.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 7,
+            "code": "  <uses-sdk android:targetSdkVersion=\"23\" android:minSdkVersion=\"15\" />\n  <uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />\n  <uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />\n  <uses-permission android:name=\"android.permission.INTERNET\" />\n  <application android:icon=\"@jakhar.aseem.diva:mipmap/ic_launcher\" android:debuggable=\"true\" android:supportsRtl=\"true\" android:theme=\"@jakhar.aseem.diva:style/AppTheme\" android:allowBackup=\"true\" android:label=\"@jakhar.aseem.diva:string/app_name\">\n    <activity android:theme=\"@jakhar.aseem.diva:style/AppTheme.NoActionBar\" android:label=\"@jakhar.aseem.diva:string/app_name\" android:name=\"jakhar.aseem.diva.MainActivity\">\n      <intent-filter>\n        <action android:name=\"android.intent.action.MAIN\" />\n        <category android:name=\"android.intent.category.LAUNCHER\" />\n"
+        },
+        {
+            "criticality": "critical",
+            "name": "SQL injection",
+            "description": "This application is vulnerable to SQL injection. Any data stored in database can be exposed as any attacker is able to retrive, modify and delete the stored information.",
+            "file": "classes/jakhar/aseem/diva/InsecureDataStorage2Activity.java",
+            "language": "java",
+            "line": 44,
+            "code": "    {\n      SQLiteDatabase localSQLiteDatabase = mDB;\n      StringBuilder localStringBuilder = new java/lang/StringBuilder;\n      localStringBuilder.<init>();\n      localSQLiteDatabase.execSQL(\"INSERT INTO myuser VALUES ('\" + localEditText.getText().toString() + \"', '\" + paramView.getText().toString() + \"');\");\n      mDB.close();\n      Toast.makeText(this, \"3rd party credentials saved successfully!\", 0).show();\n      return;\n    }\n"
+        },
+        {
+            "criticality": "critical",
+            "name": "SQL injection",
+            "description": "This application is vulnerable to SQL injection. Any data stored in database can be exposed as any attacker is able to retrive, modify and delete the stored information.",
+            "file": "classes/jakhar/aseem/diva/SQLInjectionActivity.java",
+            "language": "java",
+            "line": 50,
+            "code": "      {\n        localObject1 = mDB;\n        localObject2 = new java/lang/StringBuilder;\n        ((StringBuilder)localObject2).<init>();\n        localObject2 = ((SQLiteDatabase)localObject1).rawQuery(\"SELECT * FROM sqliuser WHERE user = '\" + paramView.getText().toString() + \"'\", null);\n        localObject1 = new java/lang/StringBuilder;\n        ((StringBuilder)localObject1).<init>(\"\");\n        if ((localObject2 != null) && (((Cursor)localObject2).getCount() > 0))\n        {\n"
+        }
+    ],
+    "criticals_len": 3,
+    "highs": [
+        {
+            "criticality": "high",
+            "name": "Temp File Use",
+            "description": "Applications is creating temp files. Sensitive information should never be written in temp files.",
+            "file": "classes/jakhar/aseem/diva/InsecureDataStorage3Activity.java",
+            "language": "java",
+            "line": 29,
+            "code": "    paramView = (EditText)findViewById(2131493007);\n    Object localObject1 = new File(getApplicationInfodataDir);\n    try\n    {\n      Object localObject2 = File.createTempFile(\"uinfo\", \"tmp\", (File)localObject1);\n      ((File)localObject2).setReadable(true);\n      ((File)localObject2).setWritable(true);\n      localObject1 = new java/io/FileWriter;\n      ((FileWriter)localObject1).<init>((File)localObject2);\n"
+        },
+        {
+            "criticality": "high",
+            "name": "Write-Read in external storage",
+            "description": "Application can read/write in external storage. Any app can read data written in external storage.",
+            "file": "classes/jakhar/aseem/diva/InsecureDataStorage4Activity.java",
+            "language": "java",
+            "line": 26,
+            "code": "  public void saveCredentials(View paramView)\n  {\n    EditText localEditText = (EditText)findViewById(2131493010);\n    paramView = (EditText)findViewById(2131493011);\n    Object localObject1 = Environment.getExternalStorageDirectory();\n    try\n    {\n      Object localObject2 = new java/io/File;\n      StringBuilder localStringBuilder = new java/lang/StringBuilder;\n"
+        }
+    ],
+    "highs_len": 2,
+    "mediums": [
+        {
+            "criticality": "medium",
+            "name": "Allows Backup",
+            "description": "This option allows backups of the application data via adb. Malicious people with physical access could use adb to get private data of your app into their PC.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 7,
+            "code": "  <uses-sdk android:targetSdkVersion=\"23\" android:minSdkVersion=\"15\" />\n  <uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />\n  <uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />\n  <uses-permission android:name=\"android.permission.INTERNET\" />\n  <application android:icon=\"@jakhar.aseem.diva:mipmap/ic_launcher\" android:debuggable=\"true\" android:supportsRtl=\"true\" android:theme=\"@jakhar.aseem.diva:style/AppTheme\" android:allowBackup=\"true\" android:label=\"@jakhar.aseem.diva:string/app_name\">\n    <activity android:theme=\"@jakhar.aseem.diva:style/AppTheme.NoActionBar\" android:label=\"@jakhar.aseem.diva:string/app_name\" android:name=\"jakhar.aseem.diva.MainActivity\">\n      <intent-filter>\n        <action android:name=\"android.intent.action.MAIN\" />\n        <category android:name=\"android.intent.category.LAUNCHER\" />\n"
+        }
+    ],
+    "mediums_len": 1,
+    "lows": [
+        {
+            "criticality": "low",
+            "name": "Generic Exception in catch",
+            "description": "Exception catching should be specific. Generic Exception type could not be safe and lead to silent error suppresion",
+            "file": "classes/jakhar/aseem/diva/InsecureDataStorage2Activity.java",
+            "language": "java",
+            "line": 26,
+            "code": "      mDB.execSQL(\"CREATE TABLE IF NOT EXISTS myuser(user VARCHAR, password VARCHAR);\");\n      setContentView(2130968612);\n      return;\n    }\n    catch (Exception paramBundle)\n    {\n      for (;;)\n      {\n        Log.d(\"Diva\", \"Error occurred while creating database: \" + paramBundle.getMessage());\n"
+        },
+        {
+            "criticality": "low",
+            "name": "Generic Exception in catch",
+            "description": "Exception catching should be specific. Generic Exception type could not be safe and lead to silent error suppresion",
+            "file": "classes/jakhar/aseem/diva/InsecureDataStorage2Activity.java",
+            "language": "java",
+            "line": 49,
+            "code": "      mDB.close();\n      Toast.makeText(this, \"3rd party credentials saved successfully!\", 0).show();\n      return;\n    }\n    catch (Exception paramView)\n    {\n      for (;;)\n      {\n        Log.d(\"Diva\", \"Error occurred while inserting into database: \" + paramView.getMessage());\n"
+        },
+        {
+            "criticality": "low",
+            "name": "Generic Exception in catch",
+            "description": "Exception catching should be specific. Generic Exception type could not be safe and lead to silent error suppresion",
+            "file": "classes/jakhar/aseem/diva/InsecureDataStorage3Activity.java",
+            "language": "java",
+            "line": 41,
+            "code": "      ((FileWriter)localObject1).close();\n      Toast.makeText(this, \"3rd party credentials saved successfully!\", 0).show();\n      return;\n    }\n    catch (Exception paramView)\n    {\n      for (;;)\n      {\n        Toast.makeText(this, \"File error occurred\", 0).show();\n"
+        },
+        {
+            "criticality": "low",
+            "name": "Generic Exception in catch",
+            "description": "Exception catching should be specific. Generic Exception type could not be safe and lead to silent error suppresion",
+            "file": "classes/jakhar/aseem/diva/InsecureDataStorage4Activity.java",
+            "language": "java",
+            "line": 44,
+            "code": "      ((FileWriter)localObject1).close();\n      Toast.makeText(this, \"3rd party credentials saved successfully!\", 0).show();\n      return;\n    }\n    catch (Exception paramView)\n    {\n      for (;;)\n      {\n        Toast.makeText(this, \"File error occurred\", 0).show();\n"
+        },
+        {
+            "criticality": "low",
+            "name": "Generic Exception in catch",
+            "description": "Exception catching should be specific. Generic Exception type could not be safe and lead to silent error suppresion",
+            "file": "classes/jakhar/aseem/diva/SQLInjectionActivity.java",
+            "language": "java",
+            "line": 31,
+            "code": "      mDB.execSQL(\"INSERT INTO sqliuser VALUES ('john', 'password123', '5555666677778888');\");\n      setContentView(2130968617);\n      return;\n    }\n    catch (Exception paramBundle)\n    {\n      for (;;)\n      {\n        Log.d(\"Diva-sqli\", \"Error occurred while creating database for SQLI: \" + paramBundle.getMessage());\n"
+        },
+        {
+            "criticality": "low",
+            "name": "Generic Exception in catch",
+            "description": "Exception catching should be specific. Generic Exception type could not be safe and lead to silent error suppresion",
+            "file": "classes/jakhar/aseem/diva/SQLInjectionActivity.java",
+            "language": "java",
+            "line": 66,
+            "code": "          Toast.makeText(this, ((StringBuilder)localObject1).toString(), 0).show();\n          return;\n        }\n      }\n      catch (Exception paramView)\n      {\n        Object localObject1;\n        Object localObject2;\n        Log.d(\"Diva-sqli\", \"Error occurred while searching in database: \" + paramView.getMessage());\n"
+        },
+        {
+            "criticality": "low",
+            "name": "Unchecked output in Logs",
+            "description": "Sensitive information should never be logged since it can lead to that information being disclosed.",
+            "file": "classes/jakhar/aseem/diva/InsecureDataStorage2Activity.java",
+            "language": "java",
+            "line": 30,
+            "code": "    catch (Exception paramBundle)\n    {\n      for (;;)\n      {\n        Log.d(\"Diva\", \"Error occurred while creating database: \" + paramBundle.getMessage());\n      }\n    }\n  }\n  \n"
+        },
+        {
+            "criticality": "low",
+            "name": "Unchecked output in Logs",
+            "description": "Sensitive information should never be logged since it can lead to that information being disclosed.",
+            "file": "classes/jakhar/aseem/diva/InsecureDataStorage2Activity.java",
+            "language": "java",
+            "line": 53,
+            "code": "    catch (Exception paramView)\n    {\n      for (;;)\n      {\n        Log.d(\"Diva\", \"Error occurred while inserting into database: \" + paramView.getMessage());\n      }\n    }\n  }\n}\n"
+        },
+        {
+            "criticality": "low",
+            "name": "Unchecked output in Logs",
+            "description": "Sensitive information should never be logged since it can lead to that information being disclosed.",
+            "file": "classes/jakhar/aseem/diva/InsecureDataStorage3Activity.java",
+            "language": "java",
+            "line": 46,
+            "code": "    {\n      for (;;)\n      {\n        Toast.makeText(this, \"File error occurred\", 0).show();\n        Log.d(\"Diva\", \"File error: \" + paramView.getMessage());\n      }\n    }\n  }\n}\n"
+        },
+        {
+            "criticality": "low",
+            "name": "Unchecked output in Logs",
+            "description": "Sensitive information should never be logged since it can lead to that information being disclosed.",
+            "file": "classes/jakhar/aseem/diva/InsecureDataStorage4Activity.java",
+            "language": "java",
+            "line": 49,
+            "code": "    {\n      for (;;)\n      {\n        Toast.makeText(this, \"File error occurred\", 0).show();\n        Log.d(\"Diva\", \"File error: \" + paramView.getMessage());\n      }\n    }\n  }\n}\n"
+        },
+        {
+            "criticality": "low",
+            "name": "Unchecked output in Logs",
+            "description": "Sensitive information should never be logged since it can lead to that information being disclosed.",
+            "file": "classes/jakhar/aseem/diva/LogActivity.java",
+            "language": "java",
+            "line": 30,
+            "code": "    catch (RuntimeException localRuntimeException)\n    {\n      for (;;)\n      {\n        Log.e(\"diva-log\", \"Error while processing transaction with credit card: \" + paramView.getText().toString());\n        Toast.makeText(this, \"An error occured. Please try again later\", 0).show();\n      }\n    }\n  }\n"
+        },
+        {
+            "criticality": "low",
+            "name": "Unchecked output in Logs",
+            "description": "Sensitive information should never be logged since it can lead to that information being disclosed.",
+            "file": "classes/jakhar/aseem/diva/SQLInjectionActivity.java",
+            "language": "java",
+            "line": 35,
+            "code": "    catch (Exception paramBundle)\n    {\n      for (;;)\n      {\n        Log.d(\"Diva-sqli\", \"Error occurred while creating database for SQLI: \" + paramBundle.getMessage());\n      }\n    }\n  }\n  \n"
+        },
+        {
+            "criticality": "low",
+            "name": "Unchecked output in Logs",
+            "description": "Sensitive information should never be logged since it can lead to that information being disclosed.",
+            "file": "classes/jakhar/aseem/diva/SQLInjectionActivity.java",
+            "language": "java",
+            "line": 70,
+            "code": "      catch (Exception paramView)\n      {\n        Object localObject1;\n        Object localObject2;\n        Log.d(\"Diva-sqli\", \"Error occurred while searching in database: \" + paramView.getMessage());\n        continue;\n      }\n      localObject2 = new java/lang/StringBuilder;\n      ((StringBuilder)localObject2).<init>();\n"
+        }
+    ],
+    "lows_len": 13,
+    "warnings": [
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 8,
+            "code": "  <uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />\n  <uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />\n  <uses-permission android:name=\"android.permission.INTERNET\" />\n  <application android:icon=\"@jakhar.aseem.diva:mipmap/ic_launcher\" android:debuggable=\"true\" android:supportsRtl=\"true\" android:theme=\"@jakhar.aseem.diva:style/AppTheme\" android:allowBackup=\"true\" android:label=\"@jakhar.aseem.diva:string/app_name\">\n    <activity android:theme=\"@jakhar.aseem.diva:style/AppTheme.NoActionBar\" android:label=\"@jakhar.aseem.diva:string/app_name\" android:name=\"jakhar.aseem.diva.MainActivity\">\n      <intent-filter>\n        <action android:name=\"android.intent.action.MAIN\" />\n        <category android:name=\"android.intent.category.LAUNCHER\" />\n      </intent-filter>\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 14,
+            "code": "        <action android:name=\"android.intent.action.MAIN\" />\n        <category android:name=\"android.intent.category.LAUNCHER\" />\n      </intent-filter>\n    </activity>\n    <activity android:label=\"@jakhar.aseem.diva:string/d1\" android:name=\"jakhar.aseem.diva.LogActivity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d2\" android:name=\"jakhar.aseem.diva.HardcodeActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InsecureDataStorage1Activity\" android:label=\"@jakhar.aseem.diva:string/d3\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d4\" android:name=\"jakhar.aseem.diva.InsecureDataStorage2Activity\" />\n    <activity android:name=\"jakhar.aseem.diva.InsecureDataStorage3Activity\" android:label=\"@jakhar.aseem.diva:string/d5\" />\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 15,
+            "code": "        <category android:name=\"android.intent.category.LAUNCHER\" />\n      </intent-filter>\n    </activity>\n    <activity android:label=\"@jakhar.aseem.diva:string/d1\" android:name=\"jakhar.aseem.diva.LogActivity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d2\" android:name=\"jakhar.aseem.diva.HardcodeActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InsecureDataStorage1Activity\" android:label=\"@jakhar.aseem.diva:string/d3\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d4\" android:name=\"jakhar.aseem.diva.InsecureDataStorage2Activity\" />\n    <activity android:name=\"jakhar.aseem.diva.InsecureDataStorage3Activity\" android:label=\"@jakhar.aseem.diva:string/d5\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d6\" android:name=\"jakhar.aseem.diva.InsecureDataStorage4Activity\" />\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 16,
+            "code": "      </intent-filter>\n    </activity>\n    <activity android:label=\"@jakhar.aseem.diva:string/d1\" android:name=\"jakhar.aseem.diva.LogActivity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d2\" android:name=\"jakhar.aseem.diva.HardcodeActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InsecureDataStorage1Activity\" android:label=\"@jakhar.aseem.diva:string/d3\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d4\" android:name=\"jakhar.aseem.diva.InsecureDataStorage2Activity\" />\n    <activity android:name=\"jakhar.aseem.diva.InsecureDataStorage3Activity\" android:label=\"@jakhar.aseem.diva:string/d5\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d6\" android:name=\"jakhar.aseem.diva.InsecureDataStorage4Activity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d7\" android:name=\"jakhar.aseem.diva.SQLInjectionActivity\" />\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 17,
+            "code": "    </activity>\n    <activity android:label=\"@jakhar.aseem.diva:string/d1\" android:name=\"jakhar.aseem.diva.LogActivity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d2\" android:name=\"jakhar.aseem.diva.HardcodeActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InsecureDataStorage1Activity\" android:label=\"@jakhar.aseem.diva:string/d3\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d4\" android:name=\"jakhar.aseem.diva.InsecureDataStorage2Activity\" />\n    <activity android:name=\"jakhar.aseem.diva.InsecureDataStorage3Activity\" android:label=\"@jakhar.aseem.diva:string/d5\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d6\" android:name=\"jakhar.aseem.diva.InsecureDataStorage4Activity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d7\" android:name=\"jakhar.aseem.diva.SQLInjectionActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InputValidation2URISchemeActivity\" android:label=\"@jakhar.aseem.diva:string/d8\" />\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 18,
+            "code": "    <activity android:label=\"@jakhar.aseem.diva:string/d1\" android:name=\"jakhar.aseem.diva.LogActivity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d2\" android:name=\"jakhar.aseem.diva.HardcodeActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InsecureDataStorage1Activity\" android:label=\"@jakhar.aseem.diva:string/d3\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d4\" android:name=\"jakhar.aseem.diva.InsecureDataStorage2Activity\" />\n    <activity android:name=\"jakhar.aseem.diva.InsecureDataStorage3Activity\" android:label=\"@jakhar.aseem.diva:string/d5\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d6\" android:name=\"jakhar.aseem.diva.InsecureDataStorage4Activity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d7\" android:name=\"jakhar.aseem.diva.SQLInjectionActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InputValidation2URISchemeActivity\" android:label=\"@jakhar.aseem.diva:string/d8\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d9\" android:name=\"jakhar.aseem.diva.AccessControl1Activity\" />\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 19,
+            "code": "    <activity android:label=\"@jakhar.aseem.diva:string/d2\" android:name=\"jakhar.aseem.diva.HardcodeActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InsecureDataStorage1Activity\" android:label=\"@jakhar.aseem.diva:string/d3\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d4\" android:name=\"jakhar.aseem.diva.InsecureDataStorage2Activity\" />\n    <activity android:name=\"jakhar.aseem.diva.InsecureDataStorage3Activity\" android:label=\"@jakhar.aseem.diva:string/d5\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d6\" android:name=\"jakhar.aseem.diva.InsecureDataStorage4Activity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d7\" android:name=\"jakhar.aseem.diva.SQLInjectionActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InputValidation2URISchemeActivity\" android:label=\"@jakhar.aseem.diva:string/d8\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d9\" android:name=\"jakhar.aseem.diva.AccessControl1Activity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/apic_label\" android:name=\"jakhar.aseem.diva.APICredsActivity\">\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 20,
+            "code": "    <activity android:name=\"jakhar.aseem.diva.InsecureDataStorage1Activity\" android:label=\"@jakhar.aseem.diva:string/d3\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d4\" android:name=\"jakhar.aseem.diva.InsecureDataStorage2Activity\" />\n    <activity android:name=\"jakhar.aseem.diva.InsecureDataStorage3Activity\" android:label=\"@jakhar.aseem.diva:string/d5\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d6\" android:name=\"jakhar.aseem.diva.InsecureDataStorage4Activity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d7\" android:name=\"jakhar.aseem.diva.SQLInjectionActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InputValidation2URISchemeActivity\" android:label=\"@jakhar.aseem.diva:string/d8\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d9\" android:name=\"jakhar.aseem.diva.AccessControl1Activity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/apic_label\" android:name=\"jakhar.aseem.diva.APICredsActivity\">\n      <intent-filter>\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 21,
+            "code": "    <activity android:label=\"@jakhar.aseem.diva:string/d4\" android:name=\"jakhar.aseem.diva.InsecureDataStorage2Activity\" />\n    <activity android:name=\"jakhar.aseem.diva.InsecureDataStorage3Activity\" android:label=\"@jakhar.aseem.diva:string/d5\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d6\" android:name=\"jakhar.aseem.diva.InsecureDataStorage4Activity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d7\" android:name=\"jakhar.aseem.diva.SQLInjectionActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InputValidation2URISchemeActivity\" android:label=\"@jakhar.aseem.diva:string/d8\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d9\" android:name=\"jakhar.aseem.diva.AccessControl1Activity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/apic_label\" android:name=\"jakhar.aseem.diva.APICredsActivity\">\n      <intent-filter>\n        <action android:name=\"jakhar.aseem.diva.action.VIEW_CREDS\" />\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 22,
+            "code": "    <activity android:name=\"jakhar.aseem.diva.InsecureDataStorage3Activity\" android:label=\"@jakhar.aseem.diva:string/d5\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d6\" android:name=\"jakhar.aseem.diva.InsecureDataStorage4Activity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d7\" android:name=\"jakhar.aseem.diva.SQLInjectionActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InputValidation2URISchemeActivity\" android:label=\"@jakhar.aseem.diva:string/d8\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d9\" android:name=\"jakhar.aseem.diva.AccessControl1Activity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/apic_label\" android:name=\"jakhar.aseem.diva.APICredsActivity\">\n      <intent-filter>\n        <action android:name=\"jakhar.aseem.diva.action.VIEW_CREDS\" />\n        <category android:name=\"android.intent.category.DEFAULT\" />\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 23,
+            "code": "    <activity android:label=\"@jakhar.aseem.diva:string/d6\" android:name=\"jakhar.aseem.diva.InsecureDataStorage4Activity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d7\" android:name=\"jakhar.aseem.diva.SQLInjectionActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InputValidation2URISchemeActivity\" android:label=\"@jakhar.aseem.diva:string/d8\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d9\" android:name=\"jakhar.aseem.diva.AccessControl1Activity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/apic_label\" android:name=\"jakhar.aseem.diva.APICredsActivity\">\n      <intent-filter>\n        <action android:name=\"jakhar.aseem.diva.action.VIEW_CREDS\" />\n        <category android:name=\"android.intent.category.DEFAULT\" />\n      </intent-filter>\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 29,
+            "code": "        <action android:name=\"jakhar.aseem.diva.action.VIEW_CREDS\" />\n        <category android:name=\"android.intent.category.DEFAULT\" />\n      </intent-filter>\n    </activity>\n    <activity android:label=\"@jakhar.aseem.diva:string/d10\" android:name=\"jakhar.aseem.diva.AccessControl2Activity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/apic2_label\" android:name=\"jakhar.aseem.diva.APICreds2Activity\">\n      <intent-filter>\n        <action android:name=\"jakhar.aseem.diva.action.VIEW_CREDS2\" />\n        <category android:name=\"android.intent.category.DEFAULT\" />\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 30,
+            "code": "        <category android:name=\"android.intent.category.DEFAULT\" />\n      </intent-filter>\n    </activity>\n    <activity android:label=\"@jakhar.aseem.diva:string/d10\" android:name=\"jakhar.aseem.diva.AccessControl2Activity\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/apic2_label\" android:name=\"jakhar.aseem.diva.APICreds2Activity\">\n      <intent-filter>\n        <action android:name=\"jakhar.aseem.diva.action.VIEW_CREDS2\" />\n        <category android:name=\"android.intent.category.DEFAULT\" />\n      </intent-filter>\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 37,
+            "code": "        <category android:name=\"android.intent.category.DEFAULT\" />\n      </intent-filter>\n    </activity>\n    <provider android:name=\"jakhar.aseem.diva.NotesProvider\" android:enabled=\"true\" android:authorities=\"jakhar.aseem.diva.provider.notesprovider\" android:exported=\"true\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d11\" android:name=\"jakhar.aseem.diva.AccessControl3Activity\" />\n    <activity android:name=\"jakhar.aseem.diva.Hardcode2Activity\" android:label=\"@jakhar.aseem.diva:string/d12\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/pnotes\" android:name=\"jakhar.aseem.diva.AccessControl3NotesActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InputValidation3Activity\" android:label=\"@jakhar.aseem.diva:string/d13\" />\n  </application>\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 38,
+            "code": "      </intent-filter>\n    </activity>\n    <provider android:name=\"jakhar.aseem.diva.NotesProvider\" android:enabled=\"true\" android:authorities=\"jakhar.aseem.diva.provider.notesprovider\" android:exported=\"true\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d11\" android:name=\"jakhar.aseem.diva.AccessControl3Activity\" />\n    <activity android:name=\"jakhar.aseem.diva.Hardcode2Activity\" android:label=\"@jakhar.aseem.diva:string/d12\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/pnotes\" android:name=\"jakhar.aseem.diva.AccessControl3NotesActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InputValidation3Activity\" android:label=\"@jakhar.aseem.diva:string/d13\" />\n  </application>\n</manifest>\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 39,
+            "code": "    </activity>\n    <provider android:name=\"jakhar.aseem.diva.NotesProvider\" android:enabled=\"true\" android:authorities=\"jakhar.aseem.diva.provider.notesprovider\" android:exported=\"true\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d11\" android:name=\"jakhar.aseem.diva.AccessControl3Activity\" />\n    <activity android:name=\"jakhar.aseem.diva.Hardcode2Activity\" android:label=\"@jakhar.aseem.diva:string/d12\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/pnotes\" android:name=\"jakhar.aseem.diva.AccessControl3NotesActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InputValidation3Activity\" android:label=\"@jakhar.aseem.diva:string/d13\" />\n  </application>\n</manifest>\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported activity",
+            "description": "Exported activity was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 40,
+            "code": "    <provider android:name=\"jakhar.aseem.diva.NotesProvider\" android:enabled=\"true\" android:authorities=\"jakhar.aseem.diva.provider.notesprovider\" android:exported=\"true\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d11\" android:name=\"jakhar.aseem.diva.AccessControl3Activity\" />\n    <activity android:name=\"jakhar.aseem.diva.Hardcode2Activity\" android:label=\"@jakhar.aseem.diva:string/d12\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/pnotes\" android:name=\"jakhar.aseem.diva.AccessControl3NotesActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InputValidation3Activity\" android:label=\"@jakhar.aseem.diva:string/d13\" />\n  </application>\n</manifest>\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Exported provider",
+            "description": "Exported provider was found. It can be used by other applications.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 36,
+            "code": "        <action android:name=\"jakhar.aseem.diva.action.VIEW_CREDS2\" />\n        <category android:name=\"android.intent.category.DEFAULT\" />\n      </intent-filter>\n    </activity>\n    <provider android:name=\"jakhar.aseem.diva.NotesProvider\" android:enabled=\"true\" android:authorities=\"jakhar.aseem.diva.provider.notesprovider\" android:exported=\"true\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/d11\" android:name=\"jakhar.aseem.diva.AccessControl3Activity\" />\n    <activity android:name=\"jakhar.aseem.diva.Hardcode2Activity\" android:label=\"@jakhar.aseem.diva:string/d12\" />\n    <activity android:label=\"@jakhar.aseem.diva:string/pnotes\" android:name=\"jakhar.aseem.diva.AccessControl3NotesActivity\" />\n    <activity android:name=\"jakhar.aseem.diva.InputValidation3Activity\" android:label=\"@jakhar.aseem.diva:string/d13\" />\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Internet permission",
+            "description": "Allows the app to create network sockets and use custom network protocols. The browser and other applications provide means to send data to the internet, so this permission is not required to send data to the internet. Check if the permission is actually needed.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 6,
+            "code": "<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\" platformBuildVersionCode=\"23\" android:versionName=\"1.0\" platformBuildVersionName=\"6.0-2166767\" android:versionCode=\"1\" package=\"jakhar.aseem.diva\">\n  <uses-sdk android:targetSdkVersion=\"23\" android:minSdkVersion=\"15\" />\n  <uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />\n  <uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />\n  <uses-permission android:name=\"android.permission.INTERNET\" />\n  <application android:icon=\"@jakhar.aseem.diva:mipmap/ic_launcher\" android:debuggable=\"true\" android:supportsRtl=\"true\" android:theme=\"@jakhar.aseem.diva:style/AppTheme\" android:allowBackup=\"true\" android:label=\"@jakhar.aseem.diva:string/app_name\">\n    <activity android:theme=\"@jakhar.aseem.diva:style/AppTheme.NoActionBar\" android:label=\"@jakhar.aseem.diva:string/app_name\" android:name=\"jakhar.aseem.diva.MainActivity\">\n      <intent-filter>\n        <action android:name=\"android.intent.action.MAIN\" />\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Read external storage permission",
+            "description": "Allows the app to read the contents of your SD card. Check if the permission is actually needed.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 5,
+            "code": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\" platformBuildVersionCode=\"23\" android:versionName=\"1.0\" platformBuildVersionName=\"6.0-2166767\" android:versionCode=\"1\" package=\"jakhar.aseem.diva\">\n  <uses-sdk android:targetSdkVersion=\"23\" android:minSdkVersion=\"15\" />\n  <uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />\n  <uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />\n  <uses-permission android:name=\"android.permission.INTERNET\" />\n  <application android:icon=\"@jakhar.aseem.diva:mipmap/ic_launcher\" android:debuggable=\"true\" android:supportsRtl=\"true\" android:theme=\"@jakhar.aseem.diva:style/AppTheme\" android:allowBackup=\"true\" android:label=\"@jakhar.aseem.diva:string/app_name\">\n    <activity android:theme=\"@jakhar.aseem.diva:style/AppTheme.NoActionBar\" android:label=\"@jakhar.aseem.diva:string/app_name\" android:name=\"jakhar.aseem.diva.MainActivity\">\n      <intent-filter>\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "URL Disclosure",
+            "description": "The decompilation of the source code could lead to the disclosure of private URLs.",
+            "file": "classes/jakhar/aseem/diva/APICreds2Activity.java",
+            "language": "java",
+            "line": 28,
+            "code": "    }\n    for (;;)\n    {\n      return;\n      localTextView.setText(\"Register yourself at http://payatu.com to get your PIN and then login with that PIN!\");\n      localEditText.setVisibility(0);\n      paramBundle.setVisibility(0);\n    }\n  }\n"
+        },
+        {
+            "criticality": "warning",
+            "name": "Write external storage permission",
+            "description": "Allows the app to write to the SD card. Check if the permission is actually needed.",
+            "file": "AndroidManifest.xml",
+            "language": "xml",
+            "line": 4,
+            "code": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\" platformBuildVersionCode=\"23\" android:versionName=\"1.0\" platformBuildVersionName=\"6.0-2166767\" android:versionCode=\"1\" package=\"jakhar.aseem.diva\">\n  <uses-sdk android:targetSdkVersion=\"23\" android:minSdkVersion=\"15\" />\n  <uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />\n  <uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />\n  <uses-permission android:name=\"android.permission.INTERNET\" />\n  <application android:icon=\"@jakhar.aseem.diva:mipmap/ic_launcher\" android:debuggable=\"true\" android:supportsRtl=\"true\" android:theme=\"@jakhar.aseem.diva:style/AppTheme\" android:allowBackup=\"true\" android:label=\"@jakhar.aseem.diva:string/app_name\">\n    <activity android:theme=\"@jakhar.aseem.diva:style/AppTheme.NoActionBar\" android:label=\"@jakhar.aseem.diva:string/app_name\" android:name=\"jakhar.aseem.diva.MainActivity\">\n"
+        }
+    ],
+    "warnings_len": 22
+}

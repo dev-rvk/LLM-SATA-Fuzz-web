@@ -1,0 +1,7 @@
+# Hints for finding_5
+FUZZER_TYPE_HINT: [basic]
+TARGET_ELEMENT_IDS: ["ids3Usr", "ids3Pwd", "ids3button"]
+TARGET_ELEMENT_TYPES: ["EditText", "EditText", "Button"]
+TARGET_ELEMENT_HINTS: ["@string/ids1_user", "@string/ids1_password"]
+PAYLOAD_KEYWORDS: []
+INPUT_FORMAT: [free_text]

@@ -1,0 +1,73 @@
+=== START FRIDA SCRIPT ===
+```javascript
+// Frida script for finding_0
+setImmediate(function() {
+    Java.perform(function() {
+        console.log('[*] Starting Frida script for finding_0...');
+        try {
+             const targetClass = Java.use('jakhar.aseem.diva.InsecureDataStorage1Activity');
+             const targetMethod = targetClass.saveCredentials;
+             targetMethod.implementation = function(view) { // Added 'view' argument based on method signature
+                  console.log('[*] <jakhar.aseem.diva.InsecureDataStorage1Activity: void saveCredentials(android.view.View)> Hooked!');
+                  try {
+                      // Call the original method
+                      var result = targetMethod.apply(this, arguments);
+                      // NOTE: For SharedPreferences write, confirmation might not involve an exception.
+                      // This log will only trigger if the original method *throws* an exception.
+                      // Consider adding a non-exception-based log if confirmation means simply "write occurred".
+                      // Example: console.log("[FRIDA_VULN_CONFIRMED] finding_finding_0 | Strategy: VerifySharedPrefWrite | Detail: Method executed successfully, attempting SharedPreferences write.");
+                      return result;
+                  } catch (e) {
+                      // Log confirmation *only* if an exception occurs during the method call
+                      console.log('[FRIDA_VULN_CONFIRMED] finding_finding_0 | Strategy: VerifySharedPrefWrite | Detail: Exception caught during saveCredentials: ' + e.message);
+                      throw e; // Re-throw the exception to maintain original behavior
+                  }
+             };
+        } catch(err) { console.error('[!] Error hooking <jakhar.aseem.diva.InsecureDataStorage1Activity: void saveCredentials(android.view.View)>: ' + err.message); }
+        console.log('[*] Frida hooks installed.');
+    });
+});
+```
+=== END FRIDA SCRIPT ===
+
+=== START ADB COMMAND ===
+```text
+# Command for finding finding_0
+adb shell am start -n jakhar.aseem.diva/jakhar.aseem.diva.InsecureDataStorage1Activity
+```
+=== END ADB COMMAND ===
+
+=== START FUZZING HINTS ===
+```text
+# Hints for finding_0
+FUZZER_TYPE_HINT: [basic]
+TARGET_ELEMENT_IDS: [ids1Usr, ids1Pwd, button]
+TARGET_ELEMENT_TYPES: [EditText, EditText, Button]
+TARGET_ELEMENT_HINTS: [@string/ids1_user, @string/ids1_password, @string/ids1_save]
+PAYLOAD_KEYWORDS: []
+INPUT_FORMAT: [free_text]
+```
+=== END FUZZING HINTS ===
+
+=== START FUZZER CONFIG JSON ===
+```json
+{
+    "targetPackage": "jakhar.aseem.diva",
+    "fridaScript": "finding_0_script.js",
+    "dynamicStrategy": "VerifySharedPrefWrite",
+    "fuzzIterations": 50,
+    "resetAction": "restart_app",
+    "fuzzerType": "basic",
+    "targetActivity": "jakhar.aseem.diva.InsecureDataStorage1Activity",
+    "iterationDelay": 0.5,
+    "postInteractionWait": 1.5,
+    "postFridaLaunchWait": 4.0,
+    "interactionPoints": [
+        // CRITICAL: Use ONLY the 'id's from the 'Parsed Interactive Elements' JSON above.
+        {"action": "input", "target": {"type": "id", "value": "jakhar.aseem.diva:id/ids1Usr"}, "source": "fuzz_input_1"},
+        {"action": "input", "target": {"type": "id", "value": "jakhar.aseem.diva:id/ids1Pwd"}, "source": "fuzz_input_2"},
+        {"action": "click", "target": {"type": "id", "value": "jakhar.aseem.diva:id/button"}}
+    ]
+}
+```
+=== END FUZZER CONFIG JSON ===

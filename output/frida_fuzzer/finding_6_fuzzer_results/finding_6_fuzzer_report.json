@@ -1,0 +1,80 @@
+[
+    {
+        "iteration": 1,
+        "inputs_used": {
+            "fuzz_input_1": "file",
+            "fuzz_input_2": "true"
+        },
+        "crashed": false,
+        "detections": [],
+        "ui_errors": []
+    },
+    {
+        "iteration": 2,
+        "inputs_used": {
+            "fuzz_input_1": "\u0000\u0001\u00fe\u00ff",
+            "fuzz_input_2": "0"
+        },
+        "crashed": false,
+        "detections": [],
+        "ui_errors": [
+            {
+                "action": "input",
+                "target": {
+                    "type": "id",
+                    "value": "jakhar.aseem.diva:id/ids4Usr"
+                },
+                "timestamp": "N/A",
+                "line": 3487
+            },
+            {
+                "action": "input",
+                "target": {
+                    "type": "id",
+                    "value": "jakhar.aseem.diva:id/ids4Pwd"
+                },
+                "timestamp": "N/A",
+                "line": 3500
+            },
+            {
+                "action": "click",
+                "target": {
+                    "type": "id",
+                    "value": "jakhar.aseem.diva:id/ids4button"
+                },
+                "timestamp": "N/A",
+                "line": 3512
+            }
+        ]
+    },
+    {
+        "iteration": 3,
+        "inputs_used": {
+            "fuzz_input_1": "write",
+            "fuzz_input_2": "<h1>Test</h1>"
+        },
+        "crashed": false,
+        "detections": [],
+        "ui_errors": []
+    },
+    {
+        "iteration": 4,
+        "inputs_used": {
+            "fuzz_input_1": "%s%n%x%p%s%n%x%p%s%n%x%p%s%n%x%p%s%n%x%p%s%n%x%p%s%n%x%p%s%n%x%p%s%n%x%p%s%n%x%p",
+            "fuzz_input_2": "null"
+        },
+        "crashed": false,
+        "detections": [],
+        "ui_errors": []
+    },
+    {
+        "iteration": 5,
+        "inputs_used": {
+            "fuzz_input_1": "-2147483648",
+            "fuzz_input_2": "../../../../../../../../"
+        },
+        "crashed": false,
+        "detections": [],
+        "ui_errors": []
+    }
+]

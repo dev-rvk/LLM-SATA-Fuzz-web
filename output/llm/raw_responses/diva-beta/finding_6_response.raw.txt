@@ -1,0 +1,66 @@
+=== START FRIDA SCRIPT ===
+```javascript
+// Frida script for finding_6
+setImmediate(function() {
+    Java.perform(function() {
+        console.log('[*] Starting Frida script for finding_6...');
+        try {
+             const targetClass = Java.use('jakhar.aseem.diva.InsecureDataStorage4Activity');
+             const targetMethod = targetClass.saveCredentials;
+             targetMethod.implementation = function(/* args */) {
+                  console.log('[*] <jakhar.aseem.diva.InsecureDataStorage4Activity: void saveCredentials(android.view.View)> Hooked!');
+                  try {
+                      var result = targetMethod.apply(this, arguments);
+                      return result;
+                  } catch (e) {
+                      console.log('[FRIDA_VULN_CONFIRMED] finding_finding_6 | Strategy: FuzzFileWriteException | Detail: Exception caught: ' + e.message);
+                      throw e;
+                  }
+             };
+        } catch(err) { console.error('[!] Error hooking <jakhar.aseem.diva.InsecureDataStorage4Activity: void saveCredentials(android.view.View)>: ' + err.message); }
+        console.log('[*] Frida hooks installed.');
+    });
+});
+```
+=== END FRIDA SCRIPT ===
+
+=== START ADB COMMAND ===
+```text
+# Command for finding finding_6
+adb shell am start -n jakhar.aseem.diva/jakhar.aseem.diva.InsecureDataStorage4Activity
+```
+=== END ADB COMMAND ===
+
+=== START FUZZING HINTS ===
+```text
+# Hints for finding_6
+FUZZER_TYPE_HINT: [basic]
+TARGET_ELEMENT_IDS: [ids4Usr, ids4Pwd, ids4button]
+TARGET_ELEMENT_TYPES: [EditText, EditText, Button]
+TARGET_ELEMENT_HINTS: [@string/ids1_user, @string/ids1_password, @string/ids1_save]
+PAYLOAD_KEYWORDS: [file, write, external storage]
+INPUT_FORMAT: [free_text]
+```
+=== END FUZZING HINTS ===
+
+=== START FUZZER CONFIG JSON ===
+```json
+{
+    "targetPackage": "jakhar.aseem.diva",
+    "fridaScript": "finding_6_script.js",
+    "dynamicStrategy": "FuzzFileWriteException",
+    "fuzzIterations": 50,
+    "resetAction": "restart_app",
+    "fuzzerType": "basic",
+    "targetActivity": "jakhar.aseem.diva.InsecureDataStorage4Activity",
+    "iterationDelay": 0.5,
+    "postInteractionWait": 1.5,
+    "postFridaLaunchWait": 4.0,
+    "interactionPoints": [
+        {"action": "input", "target": {"type": "id", "value": "jakhar.aseem.diva:id/ids4Usr"}, "source": "fuzz_input_1"},
+        {"action": "input", "target": {"type": "id", "value": "jakhar.aseem.diva:id/ids4Pwd"}, "source": "fuzz_input_2"},
+        {"action": "click", "target": {"type": "id", "value": "jakhar.aseem.diva:id/ids4button"}}
+    ]
+}
+```
+=== END FUZZER CONFIG JSON ===

@@ -1,0 +1,29 @@
+{
+    "targetPackage": "jakhar.aseem.diva",
+    "fridaScript": "finding_3_script.js",
+    "dynamicStrategy": "VerifySharedPrefWrite",
+    "fuzzIterations": 50,
+    "resetAction": "restart_app",
+    "fuzzerType": "basic",
+    "targetActivity": "jakhar.aseem.diva.AccessControl3Activity",
+    "iterationDelay": 0.5,
+    "postInteractionWait": 1.5,
+    "postFridaLaunchWait": 4.0,
+    "interactionPoints": [
+        {
+            "action": "input",
+            "target": {
+                "type": "id",
+                "value": "jakhar.aseem.diva:id/aci3Pin"
+            },
+            "source": "fuzz_input_1"
+        },
+        {
+            "action": "click",
+            "target": {
+                "type": "id",
+                "value": "jakhar.aseem.diva:id/aci3createpinbutton"
+            }
+        }
+    ]
+}

@@ -1,0 +1,37 @@
+{
+    "targetPackage": "jakhar.aseem.diva",
+    "fridaScript": "finding_0_script.js",
+    "dynamicStrategy": "VerifySharedPrefWrite",
+    "fuzzIterations": 50,
+    "resetAction": "restart_app",
+    "fuzzerType": "basic",
+    "targetActivity": "jakhar.aseem.diva.InsecureDataStorage1Activity",
+    "iterationDelay": 0.5,
+    "postInteractionWait": 1.5,
+    "postFridaLaunchWait": 4.0,
+    "interactionPoints": [
+        {
+            "action": "input",
+            "target": {
+                "type": "id",
+                "value": "jakhar.aseem.diva:id/ids1Usr"
+            },
+            "source": "fuzz_input_1"
+        },
+        {
+            "action": "input",
+            "target": {
+                "type": "id",
+                "value": "jakhar.aseem.diva:id/ids1Pwd"
+            },
+            "source": "fuzz_input_2"
+        },
+        {
+            "action": "click",
+            "target": {
+                "type": "id",
+                "value": "jakhar.aseem.diva:id/button"
+            }
+        }
+    ]
+}

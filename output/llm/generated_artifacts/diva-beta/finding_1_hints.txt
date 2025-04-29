@@ -1,0 +1,7 @@
+# Hints for finding_1
+FUZZER_TYPE_HINT: [SQLi]
+TARGET_ELEMENT_IDS: [ids2Usr, ids2Pwd]
+TARGET_ELEMENT_TYPES: [EditText, EditText]
+TARGET_ELEMENT_HINTS: [ids1_user, ids1_password]
+PAYLOAD_KEYWORDS: [sql, insert, select, update, delete]
+INPUT_FORMAT: [free_text]

@@ -1,0 +1,7 @@
+# Hints for finding_2
+FUZZER_TYPE_HINT: [basic]
+TARGET_ELEMENT_IDS: [ccText, button]
+TARGET_ELEMENT_TYPES: [EditText, Button]
+TARGET_ELEMENT_HINTS: [@string/log_enter, @string/log_checkout]
+PAYLOAD_KEYWORDS: [credit card, number, transaction]
+INPUT_FORMAT: [free_text]

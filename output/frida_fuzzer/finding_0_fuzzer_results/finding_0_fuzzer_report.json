@@ -1,0 +1,105 @@
+[
+    {
+        "iteration": 1,
+        "inputs_used": {
+            "fuzz_input_1": "\u0000\u0001\u00fe\u00ff",
+            "fuzz_input_2": "<h1>Test</h1>"
+        },
+        "crashed": false,
+        "detections": [],
+        "ui_errors": [
+            {
+                "action": "input",
+                "target": {
+                    "type": "id",
+                    "value": "jakhar.aseem.diva:id/ids1Usr"
+                },
+                "timestamp": "N/A",
+                "line": 2075
+            },
+            {
+                "action": "input",
+                "target": {
+                    "type": "id",
+                    "value": "jakhar.aseem.diva:id/ids1Pwd"
+                },
+                "timestamp": "N/A",
+                "line": 2087
+            },
+            {
+                "action": "click",
+                "target": {
+                    "type": "id",
+                    "value": "jakhar.aseem.diva:id/button"
+                },
+                "timestamp": "N/A",
+                "line": 2098
+            }
+        ]
+    },
+    {
+        "iteration": 2,
+        "inputs_used": {
+            "fuzz_input_1": "2147483647",
+            "fuzz_input_2": "../../../../../../../../"
+        },
+        "crashed": false,
+        "detections": [],
+        "ui_errors": [
+            {
+                "action": "input",
+                "target": {
+                    "type": "id",
+                    "value": "jakhar.aseem.diva:id/ids1Usr"
+                },
+                "timestamp": "N/A",
+                "line": 891
+            },
+            {
+                "action": "input",
+                "target": {
+                    "type": "id",
+                    "value": "jakhar.aseem.diva:id/ids1Pwd"
+                },
+                "timestamp": "N/A",
+                "line": 903
+            },
+            {
+                "action": "click",
+                "target": {
+                    "type": "id",
+                    "value": "jakhar.aseem.diva:id/button"
+                },
+                "timestamp": "N/A",
+                "line": 914
+            },
+            {
+                "action": "input",
+                "target": {
+                    "type": "id",
+                    "value": "jakhar.aseem.diva:id/ids1Usr"
+                },
+                "timestamp": "N/A",
+                "line": 2160
+            },
+            {
+                "action": "input",
+                "target": {
+                    "type": "id",
+                    "value": "jakhar.aseem.diva:id/ids1Pwd"
+                },
+                "timestamp": "N/A",
+                "line": 2172
+            },
+            {
+                "action": "click",
+                "target": {
+                    "type": "id",
+                    "value": "jakhar.aseem.diva:id/button"
+                },
+                "timestamp": "N/A",
+                "line": 2183
+            }
+        ]
+    }
+]

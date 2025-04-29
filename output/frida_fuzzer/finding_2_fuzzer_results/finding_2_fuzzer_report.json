@@ -1,0 +1,143 @@
+[
+    {
+        "iteration": 1,
+        "inputs_used": {
+            "fuzz_input_1": "1"
+        },
+        "crashed": false,
+        "detections": [
+            {
+                "type": "Vulnerability Confirmed",
+                "finding_id": "finding_2",
+                "strategy": "VerifyLogContent",
+                "timestamp": "N/A",
+                "message": "Sensitive data logged: Error while processing transaction with credit card: -2147483648",
+                "line": 107
+            },
+            {
+                "type": "Vulnerability Confirmed",
+                "finding_id": "finding_2",
+                "strategy": "HookLogCall",
+                "timestamp": "N/A",
+                "message": "Sensitive Log.e detected: tag='diva-log', msg='Error while processing transaction with credit card: <h1>Test</h1>'",
+                "line": 679
+            }
+        ],
+        "ui_errors": []
+    },
+    {
+        "iteration": 2,
+        "inputs_used": {
+            "fuzz_input_1": "-2147483648"
+        },
+        "crashed": false,
+        "detections": [
+            {
+                "type": "Vulnerability Confirmed",
+                "finding_id": "finding_2",
+                "strategy": "VerifyLogContent",
+                "timestamp": "N/A",
+                "message": "Sensitive data logged: Error while processing transaction with credit card: \u6e2c\u8a66",
+                "line": 211
+            },
+            {
+                "type": "Vulnerability Confirmed",
+                "finding_id": "finding_2",
+                "strategy": "HookLogCall",
+                "timestamp": "N/A",
+                "message": "Sensitive Log.e detected: tag='diva-log', msg='Error while processing transaction with credit card: card'",
+                "line": 782
+            }
+        ],
+        "ui_errors": []
+    },
+    {
+        "iteration": 3,
+        "inputs_used": {
+            "fuzz_input_1": "\u0000\u0001\u00fe\u00ff"
+        },
+        "crashed": false,
+        "detections": [
+            {
+                "type": "Vulnerability Confirmed",
+                "finding_id": "finding_2",
+                "strategy": "VerifyLogContent",
+                "timestamp": "N/A",
+                "message": "Sensitive data logged: Error while processing transaction with credit card: -1",
+                "line": 315
+            }
+        ],
+        "ui_errors": [
+            {
+                "action": "input",
+                "target": {
+                    "type": "id",
+                    "value": "jakhar.aseem.diva:id/ccText"
+                },
+                "timestamp": "N/A",
+                "line": 841
+            },
+            {
+                "action": "click",
+                "target": {
+                    "type": "id",
+                    "value": "jakhar.aseem.diva:id/button"
+                },
+                "timestamp": "N/A",
+                "line": 852
+            }
+        ]
+    },
+    {
+        "iteration": 4,
+        "inputs_used": {
+            "fuzz_input_1": "false"
+        },
+        "crashed": false,
+        "detections": [
+            {
+                "type": "Vulnerability Confirmed",
+                "finding_id": "finding_2",
+                "strategy": "VerifyLogContent",
+                "timestamp": "N/A",
+                "message": "Sensitive data logged: Error while processing transaction with credit card: password",
+                "line": 419
+            },
+            {
+                "type": "Vulnerability Confirmed",
+                "finding_id": "finding_2",
+                "strategy": "HookLogCall",
+                "timestamp": "N/A",
+                "message": "Sensitive Log.e detected: tag='diva-log', msg='Error while processing transaction with credit card: null'",
+                "line": 957
+            }
+        ],
+        "ui_errors": []
+    },
+    {
+        "iteration": 5,
+        "inputs_used": {
+            "fuzz_input_1": ""
+        },
+        "crashed": false,
+        "detections": [
+            {
+                "type": "Vulnerability Confirmed",
+                "finding_id": "finding_2",
+                "strategy": "VerifyLogContent",
+                "timestamp": "N/A",
+                "message": "Sensitive data logged: Error while processing transaction with credit card: Leak: %s %s %s",
+                "line": 523
+            },
+            {
+                "type": "Vulnerability Confirmed",
+                "finding_id": "finding_2",
+                "strategy": "HookLogCall",
+                "timestamp": "N/A",
+                "message": "Sensitive Log.e detected: tag='diva-log', msg='Error while processing transaction with credit card: %s%s%s%s%s%s%n%n%n'",
+                "line": 1060
+            }
+        ],
+        "ui_errors": []
+    }
+]

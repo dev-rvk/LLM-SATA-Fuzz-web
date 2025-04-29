@@ -1,0 +1,22 @@
+[
+  {
+    "type": "TextView",
+    "id": "aci31textView",
+    "text": "@string/aci3_intro"
+  },
+  {
+    "type": "EditText",
+    "id": "aci3Pin",
+    "hint": "@string/aci3_enterpin"
+  },
+  {
+    "type": "Button",
+    "id": "aci3createpinbutton",
+    "text": "@string/aci3_createpin"
+  },
+  {
+    "type": "Button",
+    "id": "aci3viewbutton",
+    "text": "@string/aci3_gotonotes"
+  }
+]

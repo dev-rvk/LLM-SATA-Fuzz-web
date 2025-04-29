@@ -1,0 +1,22 @@
+[
+  {
+    "type": "TextView",
+    "id": "ids4textView",
+    "text": "@string/ids1_intro"
+  },
+  {
+    "type": "EditText",
+    "id": "ids4Usr",
+    "hint": "@string/ids1_user"
+  },
+  {
+    "type": "EditText",
+    "id": "ids4Pwd",
+    "hint": "@string/ids1_password"
+  },
+  {
+    "type": "Button",
+    "id": "ids4button",
+    "text": "@string/ids1_save"
+  }
+]

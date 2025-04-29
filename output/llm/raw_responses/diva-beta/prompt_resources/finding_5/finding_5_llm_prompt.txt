@@ -1,0 +1,239 @@
+--- USER PROMPT ---
+GENERATE THE FOLLOWING FOUR ARTIFACTS based on the analysis:
+
+1. **Frida Script**: A JavaScript script for Frida to hook the sink method `<jakhar.aseem.diva.InsecureDataStorage3Activity: void saveCredentials(android.view.View)>`.
+   - Detect vulnerability confirmation (e.g., exception, specific condition).
+   - On confirmation, print the exact log format:
+     `[FRIDA_VULN_CONFIRMED] finding_finding_5 | Strategy: FuzzFileWriteException | Detail: <specific details>`
+   - Include dynamic info (e.g., exception message) in detail.
+   - Example: `console.log("[FRIDA_VULN_CONFIRMED] finding_finding_5 | Strategy: FuzzFileWriteException | Detail: Exception caught: " + error.message);`
+   - Print ONLY on confirmation.
+2. **ADB Command**: Start the target activity `jakhar.aseem.diva.InsecureDataStorage3Activity` using `adb shell am start -n`.
+3. **Fuzzing Hints**: Key-value pairs.
+   ```text
+# Fuzzing hints for Finding: finding_5
+FUZZER_TYPE_HINT: [SQLi|File|Log|Basic]
+TARGET_ELEMENT_IDS: [] # <--- Fill EXCLUSIVELY from 'Parsed Interactive Elements' JSON
+TARGET_ELEMENT_TYPES: [] # <--- Fill EXCLUSIVELY from 'Parsed Interactive Elements' JSON
+TARGET_ELEMENT_HINTS: [] # <--- Fill EXCLUSIVELY from 'Parsed Interactive Elements' JSON
+PAYLOAD_KEYWORDS: []
+INPUT_FORMAT: [free_text]
+```
+4. **Fuzzer Config JSON**: JSON for the fuzzer.
+   **ULTRA-CRITICAL:** Generate `interactionPoints` using **ONLY** the **`id` values** found in the **`Parsed Interactive Elements from Layout XML` JSON** provided above. **DO NOT GUESS IDs** or use IDs from raw XML snippets. Verify the button ID is correct.
+   - If multiple layouts were given, choose the most relevant one first.
+   - Construct `target` -> `value` as `jakhar.aseem.diva:id/<id_from_chosen_parsed_json>`.
+   - Determine sequence (input then click).
+   - Populate other fields.
+
+OUTPUT FORMAT:
+Use these delimiters and structure EXACTLY:
+
+=== START FRIDA SCRIPT ===
+```javascript
+// Frida script for finding_5
+setImmediate(function() {{
+    Java.perform(function() {{
+        console.log('[*] Starting Frida script for finding_5...');
+        try {{
+             const targetClass = Java.use('jakhar.aseem.diva.InsecureDataStorage3Activity');
+             const targetMethod = targetClass.saveCredentials;
+             targetMethod.implementation = function(/* args */) {{
+                  console.log('[*] <jakhar.aseem.diva.InsecureDataStorage3Activity: void saveCredentials(android.view.View)> Hooked!');
+                  try {{
+                      var result = targetMethod.apply(this, arguments);
+                      return result;
+                  }} catch (e) {{
+                      console.log('[FRIDA_VULN_CONFIRMED] finding_finding_5 | Strategy: FuzzFileWriteException | Detail: Exception caught: ' + e.message);
+                      throw e;
+                  }}
+             }};
+        }} catch(err) {{ console.error('[!] Error hooking <jakhar.aseem.diva.InsecureDataStorage3Activity: void saveCredentials(android.view.View)>: ' + err.message); }}
+        console.log('[*] Frida hooks installed.');
+    }});
+}});
+```
+=== END FRIDA SCRIPT ===
+
+=== START ADB COMMAND ===
+```text
+# Command for finding finding_5
+adb shell am start -n jakhar.aseem.diva/jakhar.aseem.diva.InsecureDataStorage3Activity
+```
+=== END ADB COMMAND ===
+
+=== START FUZZING HINTS ===
+```text
+# Hints for finding_5
+FUZZER_TYPE_HINT: [basic]
+TARGET_ELEMENT_IDS: []
+TARGET_ELEMENT_TYPES: []
+TARGET_ELEMENT_HINTS: []
+PAYLOAD_KEYWORDS: []
+INPUT_FORMAT: [free_text]
+```
+=== END FUZZING HINTS ===
+
+=== START FUZZER CONFIG JSON ===
+```json
+{{
+    "targetPackage": "jakhar.aseem.diva",
+    "fridaScript": "finding_5_script.js",
+    "dynamicStrategy": "FuzzFileWriteException",
+    "fuzzIterations": 50,
+    "resetAction": "restart_app",
+    "fuzzerType": "basic",
+    "targetActivity": "jakhar.aseem.diva.InsecureDataStorage3Activity",
+    "iterationDelay": 0.5,
+    "postInteractionWait": 1.5,
+    "postFridaLaunchWait": 4.0,
+    "interactionPoints": [
+        // CRITICAL: Use ONLY the 'id's from the 'Parsed Interactive Elements' JSON above.
+        // Example: {"action": "input", "target": {"type": "id", "value": "jakhar.aseem.diva:id/userName"}, "source": "fuzz_input_1"},
+        // Example: {"action": "click", "target": {"type": "id", "value": "jakhar.aseem.diva:id/submitButton"}}
+        {{"action": "input", "target": {{"type": "id", "value": "jakhar.aseem.diva:id/<USE_PARSED_ID_1>"}}, "source": "fuzz_input_1"}},
+        {{"action": "click", "target": {{"type": "id", "value": "jakhar.aseem.diva:id/<USE_CORRECT_PARSED_BUTTON_ID>"}}}}
+    ]
+}}
+```
+=== END FUZZER CONFIG JSON ===
+
+Examples:
+Input: ?
+Output: ?
+Input: ?
+Output: ?
+Input: ?
+Output: ?
+Input: ?
+Output: ?
+Input: ?
+Output: ?
+Input: ?
+Output: ?
+
+ANALYZE THE FOLLOWING AND GENERATE THE FOUR ARTIFACTS:
+
+Finding ID: finding_5
+Dynamic Strategy: FuzzFileWriteException
+Sink Method (Target): <jakhar.aseem.diva.InsecureDataStorage3Activity: void saveCredentials(android.view.View)>
+Package Name: jakhar.aseem.diva
+Likely Activity Class: jakhar.aseem.diva.InsecureDataStorage3Activity
+Relevant Code Snippet:
+```java
+public void saveCredentials(View view) {
+EditText usr = (EditText) findViewById(R.id.ids3Usr);
+        EditText pwd = (EditText) findViewById(R.id.ids3Pwd);
+        File ddir = new File(getApplicationInfo().dataDir);
+        try {
+            File uinfo = File.createTempFile("uinfo", "tmp", ddir);
+            uinfo.setReadable(true);
+            uinfo.setWritable(true);
+            FileWriter fw = new FileWriter(uinfo);
+            fw.write(usr.getText().toString() + ":" + pwd.getText().toString() + "\n");
+            fw.close();
+            Toast.makeText(this, "3rd party credentials saved successfully!", 0).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "File error occurred", 0).show();
+            Log.d("Diva", "File error: " + e.getMessage());
+        }
+}
+```
+AndroidManifest.xml (Partial):
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    android:versionCode="1"
+    android:versionName="1.0"
+    package="jakhar.aseem.diva"
+    platformBuildVersionCode="23"
+    platformBuildVersionName="6.0-2166767">
+    <uses-sdk
+        android:minSdkVersion="15"
+        android:targetSdkVersion="23"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.R...
+```
+**Layout XML Information:** Single High-Confidence Match Found
+**Layout XML (High Confidence Match):**
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:textColor="@color/material_grey_600"
+        android:gravity="fill"
+        android:id="@+id/ids3textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ids1_intro"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"/>
+    <EditText
+        android:id="@+id/ids3Usr"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/ids1_user"
+        android:ems="10"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:inputType="text"/>
+    <EditText
+        android:id="@+id/ids3Pwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/ids1_password"
+        android:ems="10"
+        android:layout_below="@+id/ids3Usr"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:inputType="textPassword"/>
+    <Button
+        android:id="@+id/ids3button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ids1_save"
+        android:layout_below="@+id/ids3Pwd"
+        android:layout_alignParentLeft="false"
+        android:layout_centerHorizontal="true"
+        android:onClick="saveCredentials"/>
+</RelativeLayout>
+
+```
+
+**Parsed Interactive Elements from Layout XML:**
+**Status:** Successfully Parsed (Single)
+```json
+[
+  {
+    "type": "TextView",
+    "id": "ids3textView",
+    "text": "@string/ids1_intro"
+  },
+  {
+    "type": "EditText",
+    "id": "ids3Usr",
+    "hint": "@string/ids1_user"
+  },
+  {
+    "type": "EditText",
+    "id": "ids3Pwd",
+    "hint": "@string/ids1_password"
+  },
+  {
+    "type": "Button",
+    "id": "ids3button",
+    "text": "@string/ids1_save"
+  }
+]
+```
+
+**NOTE ON USING LAYOUT INFO FOR FUZZER CONFIG:**
+- If a **Single High-Confidence Layout** was found, use the element `id`s from its corresponding JSON.
+- Format the interaction point target ID as `jakhar.aseem.diva:id/<element_id_from_chosen_parsed_json>`.
+- **Crucially, ensure the final Button click uses the correct ID from the chosen parsed JSON, even if it appears later in the JSON list.**

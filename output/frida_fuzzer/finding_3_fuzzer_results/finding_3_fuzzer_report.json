@@ -1,0 +1,92 @@
+[
+    {
+        "iteration": 1,
+        "inputs_used": {
+            "fuzz_input_1": "0"
+        },
+        "crashed": false,
+        "detections": [
+            {
+                "type": "Vulnerability Confirmed",
+                "finding_id": "finding_3",
+                "strategy": "VerifySharedPrefWrite",
+                "timestamp": "N/A",
+                "message": "Exception caught: not a function",
+                "line": 1520
+            }
+        ],
+        "ui_errors": []
+    },
+    {
+        "iteration": 2,
+        "inputs_used": {
+            "fuzz_input_1": "null"
+        },
+        "crashed": false,
+        "detections": [
+            {
+                "type": "Vulnerability Confirmed",
+                "finding_id": "finding_3",
+                "strategy": "VerifySharedPrefWrite",
+                "timestamp": "N/A",
+                "message": "Exception caught: not a function",
+                "line": 1624
+            }
+        ],
+        "ui_errors": []
+    },
+    {
+        "iteration": 3,
+        "inputs_used": {
+            "fuzz_input_1": "\u6e2c\u8a66"
+        },
+        "crashed": false,
+        "detections": [
+            {
+                "type": "Vulnerability Confirmed",
+                "finding_id": "finding_3",
+                "strategy": "VerifySharedPrefWrite",
+                "timestamp": "N/A",
+                "message": "Exception caught: not a function",
+                "line": 1728
+            }
+        ],
+        "ui_errors": []
+    },
+    {
+        "iteration": 4,
+        "inputs_used": {
+            "fuzz_input_1": "2147483647"
+        },
+        "crashed": false,
+        "detections": [
+            {
+                "type": "Vulnerability Confirmed",
+                "finding_id": "finding_3",
+                "strategy": "VerifySharedPrefWrite",
+                "timestamp": "N/A",
+                "message": "Exception caught: not a function",
+                "line": 1832
+            }
+        ],
+        "ui_errors": []
+    },
+    {
+        "iteration": 5,
+        "inputs_used": {
+            "fuzz_input_1": "\u0000\u0001\u00fe\u00ff"
+        },
+        "crashed": false,
+        "detections": [
+            {
+                "type": "Vulnerability Confirmed",
+                "finding_id": "finding_3",
+                "strategy": "VerifySharedPrefWrite",
+                "timestamp": "N/A",
+                "message": "Exception caught: not a function",
+                "line": 1936
+            }
+        ],
+        "ui_errors": []
+    }
+]

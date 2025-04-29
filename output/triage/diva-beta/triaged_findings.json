@@ -1,0 +1,221 @@
+[
+    {
+        "FindingID": "finding_0",
+        "Sink": {
+            "Statement": "interfaceinvoke $r3.<android.content.SharedPreferences$Editor: android.content.SharedPreferences$Editor putString(java.lang.String,java.lang.String)>(\"password\", $r7)",
+            "Method": "<jakhar.aseem.diva.InsecureDataStorage1Activity: void saveCredentials(android.view.View)>",
+            "Definition": "<android.content.SharedPreferences$Editor: android.content.SharedPreferences$Editor putString(java.lang.String,java.lang.String)>",
+            "AccessPath": {
+                "Value": "$r7",
+                "Type": "java.lang.String",
+                "TaintSubFields": "true"
+            }
+        },
+        "Sources": [
+            {
+                "Statement": "$r6 = virtualinvoke r5.<android.widget.EditText: android.text.Editable getText()>()",
+                "Method": "<jakhar.aseem.diva.InsecureDataStorage1Activity: void saveCredentials(android.view.View)>",
+                "Definition": "<android.widget.EditText: android.text.Editable getText()>",
+                "AccessPath": {
+                    "Value": "$r6",
+                    "Type": "android.text.Editable",
+                    "TaintSubFields": "true"
+                }
+            }
+        ],
+        "DynamicStrategy": "VerifySharedPrefWrite",
+        "MethodSourceCode": "public void saveCredentials(View view) {\nSharedPreferences spref = PreferenceManager.getDefaultSharedPreferences(this);\n        SharedPreferences.Editor spedit = spref.edit();\n        EditText usr = (EditText) findViewById(R.id.ids1Usr);\n        EditText pwd = (EditText) findViewById(R.id.ids1Pwd);\n        spedit.putString(\"user\", usr.getText().toString());\n        spedit.putString(\"password\", pwd.getText().toString());\n        spedit.commit();\n        Toast.makeText(this, \"3rd party credentials saved successfully!\", 0).show();\n}"
+    },
+    {
+        "FindingID": "finding_1",
+        "Sink": {
+            "Statement": "virtualinvoke $r5.<android.database.sqlite.SQLiteDatabase: void execSQL(java.lang.String)>($r8)",
+            "Method": "<jakhar.aseem.diva.InsecureDataStorage2Activity: void saveCredentials(android.view.View)>",
+            "Definition": "<android.database.sqlite.SQLiteDatabase: void execSQL(java.lang.String)>",
+            "AccessPath": {
+                "Value": "$r8",
+                "Type": "java.lang.String",
+                "TaintSubFields": "true"
+            }
+        },
+        "Sources": [
+            {
+                "Statement": "$r7 = virtualinvoke r4.<android.widget.EditText: android.text.Editable getText()>()",
+                "Method": "<jakhar.aseem.diva.InsecureDataStorage2Activity: void saveCredentials(android.view.View)>",
+                "Definition": "<android.widget.EditText: android.text.Editable getText()>",
+                "AccessPath": {
+                    "Value": "$r7",
+                    "Type": "android.text.Editable",
+                    "TaintSubFields": "true"
+                }
+            },
+            {
+                "Statement": "$r7 = virtualinvoke r3.<android.widget.EditText: android.text.Editable getText()>()",
+                "Method": "<jakhar.aseem.diva.InsecureDataStorage2Activity: void saveCredentials(android.view.View)>",
+                "Definition": "<android.widget.EditText: android.text.Editable getText()>",
+                "AccessPath": {
+                    "Value": "$r7",
+                    "Type": "android.text.Editable",
+                    "TaintSubFields": "true"
+                }
+            }
+        ],
+        "DynamicStrategy": "FuzzSqlException",
+        "MethodSourceCode": "public void saveCredentials(View view) {\nEditText usr = (EditText) findViewById(R.id.ids2Usr);\n        EditText pwd = (EditText) findViewById(R.id.ids2Pwd);\n        try {\n            this.mDB.execSQL(\"INSERT INTO myuser VALUES ('\" + usr.getText().toString() + \"', '\" + pwd.getText().toString() + \"');\");\n            this.mDB.close();\n        } catch (Exception e) {\n            Log.d(\"Diva\", \"Error occurred while inserting into database: \" + e.getMessage());\n        }\n        Toast.makeText(this, \"3rd party credentials saved successfully!\", 0).show();\n}"
+    },
+    {
+        "FindingID": "finding_2",
+        "Sink": {
+            "Statement": "staticinvoke <android.util.Log: int e(java.lang.String,java.lang.String)>(\"diva-log\", $r5)",
+            "Method": "<jakhar.aseem.diva.LogActivity: void checkout(android.view.View)>",
+            "Definition": "<android.util.Log: int e(java.lang.String,java.lang.String)>",
+            "AccessPath": {
+                "Value": "$r5",
+                "Type": "java.lang.String",
+                "TaintSubFields": "true"
+            }
+        },
+        "Sources": [
+            {
+                "Statement": "$r4 = virtualinvoke r3.<android.widget.EditText: android.text.Editable getText()>()",
+                "Method": "<jakhar.aseem.diva.LogActivity: void checkout(android.view.View)>",
+                "Definition": "<android.widget.EditText: android.text.Editable getText()>",
+                "AccessPath": {
+                    "Value": "$r4",
+                    "Type": "android.text.Editable",
+                    "TaintSubFields": "true"
+                }
+            }
+        ],
+        "DynamicStrategy": "VerifyLogContent",
+        "MethodSourceCode": "public void checkout(View view) {\nEditText cctxt = (EditText) findViewById(R.id.ccText);\n        try {\n            processCC(cctxt.getText().toString());\n        } catch (RuntimeException e) {\n            Log.e(\"diva-log\", \"Error while processing transaction with credit card: \" + cctxt.getText().toString());\n            Toast.makeText(this, \"An error occured. Please try again later\", 0).show();\n        }\n}"
+    },
+    {
+        "FindingID": "finding_3",
+        "Sink": {
+            "Statement": "interfaceinvoke $r3.<android.content.SharedPreferences$Editor: android.content.SharedPreferences$Editor putString(java.lang.String,java.lang.String)>($r9, $r6)",
+            "Method": "<jakhar.aseem.diva.AccessControl3Activity: void addPin(android.view.View)>",
+            "Definition": "<android.content.SharedPreferences$Editor: android.content.SharedPreferences$Editor putString(java.lang.String,java.lang.String)>",
+            "AccessPath": {
+                "Value": "$r6",
+                "Type": "java.lang.String",
+                "TaintSubFields": "true"
+            }
+        },
+        "Sources": [
+            {
+                "Statement": "$r5 = virtualinvoke r4.<android.widget.EditText: android.text.Editable getText()>()",
+                "Method": "<jakhar.aseem.diva.AccessControl3Activity: void addPin(android.view.View)>",
+                "Definition": "<android.widget.EditText: android.text.Editable getText()>",
+                "AccessPath": {
+                    "Value": "$r5",
+                    "Type": "android.text.Editable",
+                    "TaintSubFields": "true"
+                }
+            }
+        ],
+        "DynamicStrategy": "VerifySharedPrefWrite",
+        "MethodSourceCode": "public void addPin(View view) {\nSharedPreferences spref = PreferenceManager.getDefaultSharedPreferences(this);\n        SharedPreferences.Editor spedit = spref.edit();\n        EditText pinTxt = (EditText) findViewById(R.id.aci3Pin);\n        String pin = pinTxt.getText().toString();\n        if (pin == null || pin.isEmpty()) {\n            Toast.makeText(this, \"Please Enter a valid pin!\", 0).show();\n            return;\n        }\n        Button vbutton = (Button) findViewById(R.id.aci3viewbutton);\n        spedit.putString(getString(R.string.pkey), pin);\n        spedit.commit();\n        if (vbutton.getVisibility() != 0) {\n            vbutton.setVisibility(0);\n        }\n        Toast.makeText(this, \"PIN Created successfully. Private notes are now protected with PIN\", 0).show();\n}"
+    },
+    {
+        "FindingID": "finding_4",
+        "Sink": {
+            "Statement": "interfaceinvoke $r3.<android.content.SharedPreferences$Editor: android.content.SharedPreferences$Editor putString(java.lang.String,java.lang.String)>(\"user\", $r7)",
+            "Method": "<jakhar.aseem.diva.InsecureDataStorage1Activity: void saveCredentials(android.view.View)>",
+            "Definition": "<android.content.SharedPreferences$Editor: android.content.SharedPreferences$Editor putString(java.lang.String,java.lang.String)>",
+            "AccessPath": {
+                "Value": "$r7",
+                "Type": "java.lang.String",
+                "TaintSubFields": "true"
+            }
+        },
+        "Sources": [
+            {
+                "Statement": "$r6 = virtualinvoke r4.<android.widget.EditText: android.text.Editable getText()>()",
+                "Method": "<jakhar.aseem.diva.InsecureDataStorage1Activity: void saveCredentials(android.view.View)>",
+                "Definition": "<android.widget.EditText: android.text.Editable getText()>",
+                "AccessPath": {
+                    "Value": "$r6",
+                    "Type": "android.text.Editable",
+                    "TaintSubFields": "true"
+                }
+            }
+        ],
+        "DynamicStrategy": "VerifySharedPrefWrite",
+        "MethodSourceCode": "public void saveCredentials(View view) {\nSharedPreferences spref = PreferenceManager.getDefaultSharedPreferences(this);\n        SharedPreferences.Editor spedit = spref.edit();\n        EditText usr = (EditText) findViewById(R.id.ids1Usr);\n        EditText pwd = (EditText) findViewById(R.id.ids1Pwd);\n        spedit.putString(\"user\", usr.getText().toString());\n        spedit.putString(\"password\", pwd.getText().toString());\n        spedit.commit();\n        Toast.makeText(this, \"3rd party credentials saved successfully!\", 0).show();\n}"
+    },
+    {
+        "FindingID": "finding_5",
+        "Sink": {
+            "Statement": "virtualinvoke r4.<java.io.FileWriter: void write(java.lang.String)>($r8)",
+            "Method": "<jakhar.aseem.diva.InsecureDataStorage3Activity: void saveCredentials(android.view.View)>",
+            "Definition": "<java.io.Writer: void write(java.lang.String)>",
+            "AccessPath": {
+                "Value": "$r8",
+                "Type": "java.lang.String",
+                "TaintSubFields": "true"
+            }
+        },
+        "Sources": [
+            {
+                "Statement": "$r10 = virtualinvoke r6.<android.widget.EditText: android.text.Editable getText()>()",
+                "Method": "<jakhar.aseem.diva.InsecureDataStorage3Activity: void saveCredentials(android.view.View)>",
+                "Definition": "<android.widget.EditText: android.text.Editable getText()>",
+                "AccessPath": {
+                    "Value": "$r10",
+                    "Type": "android.text.Editable",
+                    "TaintSubFields": "true"
+                }
+            },
+            {
+                "Statement": "$r10 = virtualinvoke r5.<android.widget.EditText: android.text.Editable getText()>()",
+                "Method": "<jakhar.aseem.diva.InsecureDataStorage3Activity: void saveCredentials(android.view.View)>",
+                "Definition": "<android.widget.EditText: android.text.Editable getText()>",
+                "AccessPath": {
+                    "Value": "$r10",
+                    "Type": "android.text.Editable",
+                    "TaintSubFields": "true"
+                }
+            }
+        ],
+        "DynamicStrategy": "FuzzFileWriteException",
+        "MethodSourceCode": "public void saveCredentials(View view) {\nEditText usr = (EditText) findViewById(R.id.ids3Usr);\n        EditText pwd = (EditText) findViewById(R.id.ids3Pwd);\n        File ddir = new File(getApplicationInfo().dataDir);\n        try {\n            File uinfo = File.createTempFile(\"uinfo\", \"tmp\", ddir);\n            uinfo.setReadable(true);\n            uinfo.setWritable(true);\n            FileWriter fw = new FileWriter(uinfo);\n            fw.write(usr.getText().toString() + \":\" + pwd.getText().toString() + \"\\n\");\n            fw.close();\n            Toast.makeText(this, \"3rd party credentials saved successfully!\", 0).show();\n        } catch (Exception e) {\n            Toast.makeText(this, \"File error occurred\", 0).show();\n            Log.d(\"Diva\", \"File error: \" + e.getMessage());\n        }\n}"
+    },
+    {
+        "FindingID": "finding_6",
+        "Sink": {
+            "Statement": "virtualinvoke r3.<java.io.FileWriter: void write(java.lang.String)>($r9)",
+            "Method": "<jakhar.aseem.diva.InsecureDataStorage4Activity: void saveCredentials(android.view.View)>",
+            "Definition": "<java.io.Writer: void write(java.lang.String)>",
+            "AccessPath": {
+                "Value": "$r9",
+                "Type": "java.lang.String",
+                "TaintSubFields": "true"
+            }
+        },
+        "Sources": [
+            {
+                "Statement": "$r10 = virtualinvoke r6.<android.widget.EditText: android.text.Editable getText()>()",
+                "Method": "<jakhar.aseem.diva.InsecureDataStorage4Activity: void saveCredentials(android.view.View)>",
+                "Definition": "<android.widget.EditText: android.text.Editable getText()>",
+                "AccessPath": {
+                    "Value": "$r10",
+                    "Type": "android.text.Editable",
+                    "TaintSubFields": "true"
+                }
+            },
+            {
+                "Statement": "$r10 = virtualinvoke r5.<android.widget.EditText: android.text.Editable getText()>()",
+                "Method": "<jakhar.aseem.diva.InsecureDataStorage4Activity: void saveCredentials(android.view.View)>",
+                "Definition": "<android.widget.EditText: android.text.Editable getText()>",
+                "AccessPath": {
+                    "Value": "$r10",
+                    "Type": "android.text.Editable",
+                    "TaintSubFields": "true"
+                }
+            }
+        ],
+        "DynamicStrategy": "FuzzFileWriteException",
+        "MethodSourceCode": "public void saveCredentials(View view) {\nEditText usr = (EditText) findViewById(R.id.ids4Usr);\n        EditText pwd = (EditText) findViewById(R.id.ids4Pwd);\n        File sdir = Environment.getExternalStorageDirectory();\n        try {\n            File uinfo = new File(sdir.getAbsolutePath() + \"/.uinfo.txt\");\n            uinfo.setReadable(true);\n            uinfo.setWritable(true);\n            FileWriter fw = new FileWriter(uinfo);\n            fw.write(usr.getText().toString() + \":\" + pwd.getText().toString() + \"\\n\");\n            fw.close();\n            Toast.makeText(this, \"3rd party credentials saved successfully!\", 0).show();\n        } catch (Exception e) {\n            Toast.makeText(this, \"File error occurred\", 0).show();\n            Log.d(\"Diva\", \"File error: \" + e.getMessage());\n        }\n}"
+    }
+]

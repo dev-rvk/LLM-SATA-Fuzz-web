@@ -1,0 +1,73 @@
+=== START FRIDA SCRIPT ===
+```javascript
+// Frida script for finding_5
+setImmediate(function() {
+    Java.perform(function() {
+        console.log('[*] Starting Frida script for finding_5...');
+        try {
+             const targetClass = Java.use('jakhar.aseem.diva.InsecureDataStorage3Activity');
+             const targetMethod = targetClass.saveCredentials;
+             targetMethod.implementation = function(view) { // Explicitly declare the 'view' argument based on method signature
+                  console.log('[*] <jakhar.aseem.diva.InsecureDataStorage3Activity: void saveCredentials(android.view.View)> Hooked!');
+                  try {
+                      // Call the original method with the correct arguments
+                      var result = targetMethod.call(this, view);
+                      return result;
+                  } catch (e) {
+                      // VULNERABILITY CONFIRMED: Log the specific confirmation message
+                      console.log("[FRIDA_VULN_CONFIRMED] finding_finding_5 | Strategy: FuzzFileWriteException | Detail: Exception caught during file write operation: " + e.message);
+                      // Re-throw the exception to allow normal error handling if needed, or just return
+                      throw e; // Or consider just returning if crashing the app is undesirable
+                  }
+             };
+        } catch(err) { console.error('[!] Error hooking <jakhar.aseem.diva.InsecureDataStorage3Activity: void saveCredentials(android.view.View)>: ' + err.message); }
+        console.log('[*] Frida hooks installed.');
+    });
+});
+```
+=== END FRIDA SCRIPT ===
+
+=== START ADB COMMAND ===
+```text
+# Command for finding finding_5
+adb shell am start -n jakhar.aseem.diva/jakhar.aseem.diva.InsecureDataStorage3Activity
+```
+=== END ADB COMMAND ===
+
+=== START FUZZING HINTS ===
+```text
+# Hints for finding_5
+FUZZER_TYPE_HINT: [basic]
+TARGET_ELEMENT_IDS: ["ids3Usr", "ids3Pwd", "ids3button"]
+TARGET_ELEMENT_TYPES: ["EditText", "EditText", "Button"]
+TARGET_ELEMENT_HINTS: ["@string/ids1_user", "@string/ids1_password"]
+PAYLOAD_KEYWORDS: []
+INPUT_FORMAT: [free_text]
+```
+=== END FUZZING HINTS ===
+
+=== START FUZZER CONFIG JSON ===
+```json
+{
+    "targetPackage": "jakhar.aseem.diva",
+    "fridaScript": "finding_5_script.js",
+    "dynamicStrategy": "FuzzFileWriteException",
+    "fuzzIterations": 50,
+    "resetAction": "restart_app",
+    "fuzzerType": "basic",
+    "targetActivity": "jakhar.aseem.diva.InsecureDataStorage3Activity",
+    "iterationDelay": 0.5,
+    "postInteractionWait": 1.5,
+    "postFridaLaunchWait": 4.0,
+    "interactionPoints": [
+        // CRITICAL: Use ONLY the 'id's from the 'Parsed Interactive Elements' JSON above.
+        // Input into the first EditText field
+        {"action": "input", "target": {"type": "id", "value": "jakhar.aseem.diva:id/ids3Usr"}, "source": "fuzz_input_1"},
+        // Input into the second EditText field (can use the same or different source)
+        {"action": "input", "target": {"type": "id", "value": "jakhar.aseem.diva:id/ids3Pwd"}, "source": "fuzz_input_1"},
+        // Click the button that triggers the saveCredentials method
+        {"action": "click", "target": {"type": "id", "value": "jakhar.aseem.diva:id/ids3button"}}
+    ]
+}
+```
+=== END FUZZER CONFIG JSON ===

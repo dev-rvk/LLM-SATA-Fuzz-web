@@ -1,0 +1,33 @@
+[
+    {
+        "FindingID": "finding_0",
+        "VulnerabilityType": "Insecure Data Storage - Sensitive Data in SharedPreferences",
+        "VulnerabilityDescription": "The `saveCredentials` method in `InsecureDataStorage1Activity` retrieves user input from an `EditText` identified by `R.id.ids1Pwd`. The layout file `activity_insecure_data_storage1.xml` confirms this field has `android:inputType=\"textPassword\"`, indicating sensitive password data. The code then stores this password directly into the default SharedPreferences using the line `spedit.putString(\"password\", pwd.getText().toString());` without encryption. Default SharedPreferences are stored as plain text XML files in the app's private directory. The `AndroidManifest.xml` specifies `android:allowBackup=\"true\"` and `android:debuggable=\"true\"`, increasing the risk that this unencrypted file containing the password can be accessed via `adb backup` or debugging tools on rooted/compromised devices.",
+        "SuggestedFix": "Use `EncryptedSharedPreferences` from the AndroidX Security library to automatically encrypt data stored in SharedPreferences. Initialize it with a master key obtained from the Android Keystore system for secure key management. Avoid storing raw passwords; consider storing salted hashes if only verification is needed.",
+        "Severity": "Medium",
+        "ContextAnalysis": "The layout file `activity_insecure_data_storage1.xml` confirmed that the input field `R.id.ids1Pwd` is designated for passwords via `android:inputType=\"textPassword\"`. The `AndroidManifest.xml` confirmed `android:allowBackup=\"true\"` and `android:debuggable=\"true\"`, which increases the likelihood of the insecurely stored SharedPreferences file being extracted or accessed, thus elevating the risk.",
+        "VulnerableCodeLines": [
+            "EditText pwd = (EditText) findViewById(R.id.ids1Pwd);",
+            "spedit.putString(\"password\", pwd.getText().toString());",
+            "spedit.commit();"
+        ],
+        "VulnerabilityCategory": "Insecure Data Storage"
+    },
+    {
+        "FindingID": "finding_5",
+        "VulnerabilityType": "Insecure Data Storage (World-Readable/Writable File)",
+        "VulnerabilityDescription": "The `saveCredentials` method in `jakhar.aseem.diva.InsecureDataStorage3Activity` retrieves username and password from `EditText` fields (`R.id.ids3Usr` and `R.id.ids3Pwd` identified in `activity_insecure_data_storage3.xml`). It creates a temporary file (`uinfo`) within the application's internal data directory using `File.createTempFile(\"uinfo\", \"tmp\", ddir)`. Crucially, it then makes this file world-readable and world-writable using `uinfo.setReadable(true);` and `uinfo.setWritable(true);`. The credentials (`usr.getText().toString() + \":\" + pwd.getText().toString()`) are then written to this insecurely permissioned file using `fw.write(...)`. This allows other applications on the device to read or potentially modify the stored credentials, compromising confidentiality and integrity. The layout file confirms `R.id.ids3Pwd` uses `android:inputType=\"textPassword\"`, indicating sensitive data. The `AndroidManifest.xml` shows `android:debuggable=\"true\"`, which can facilitate exploitation.",
+        "SuggestedFix": "Remove the calls `uinfo.setReadable(true);` and `uinfo.setWritable(true);`. Files created in internal storage are private by default. For storing credentials securely, use `EncryptedSharedPreferences` from the AndroidX Security library or utilize the Android Keystore system to encrypt the data before storing it in a file with default (private) permissions. Avoid using temporary files for sensitive data storage.",
+        "Severity": "High",
+        "ContextAnalysis": "The layout file `activity_insecure_data_storage3.xml` confirms that `R.id.ids3Usr` and `R.id.ids3Pwd` are `EditText` fields intended for user input, with `ids3Pwd` using `android:inputType=\"textPassword\"`, validating that sensitive credential data is being handled. The `android:onClick=\"saveCredentials\"` attribute on the button `R.id.ids3button` links the UI action to the vulnerable method. The `AndroidManifest.xml` confirms the existence of the `jakhar.aseem.diva.InsecureDataStorage3Activity` and that the application is `debuggable=\"true\"`, which can lower the bar for exploitation on rooted devices or during debugging.",
+        "VulnerableCodeLines": [
+            "EditText usr = (EditText) findViewById(R.id.ids3Usr);",
+            "EditText pwd = (EditText) findViewById(R.id.ids3Pwd);",
+            "File uinfo = File.createTempFile(\"uinfo\", \"tmp\", ddir);",
+            "uinfo.setReadable(true);",
+            "uinfo.setWritable(true);",
+            "fw.write(usr.getText().toString() + \":\" + pwd.getText().toString() + \"\\n\");"
+        ],
+        "VulnerabilityCategory": "Insecure Data Storage"
+    }
+]

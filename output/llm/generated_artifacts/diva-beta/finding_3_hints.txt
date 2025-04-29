@@ -1,0 +1,7 @@
+# Hints for finding_3
+FUZZER_TYPE_HINT: [basic]
+TARGET_ELEMENT_IDS: [aci3Pin, aci3createpinbutton]
+TARGET_ELEMENT_TYPES: [EditText, Button]
+TARGET_ELEMENT_HINTS: [aci3_enterpin, aci3_createpin]
+PAYLOAD_KEYWORDS: []
+INPUT_FORMAT: [free_text]
